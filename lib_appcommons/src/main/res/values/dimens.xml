@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_widget">8dp</dimen>
+    <dimen name="margin_full">16dp</dimen>
+    <dimen name="margin_huge">72dp</dimen>
+    <dimen name="margin_side">@dimen/margin_full</dimen>
+
+    <dimen name="height_widget">48dp</dimen>
+
+    <dimen name="elevation_header">4dp</dimen>
+    <dimen name="elevation_fab">8dp</dimen>
+
+    <dimen name="navigation_drawer_max_width">320dp</dimen>
+
+    <dimen name="title_text">24sp</dimen>
+</resources>
