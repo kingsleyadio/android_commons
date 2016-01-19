@@ -10,4 +10,8 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
+
+    <style name="fab_inset_right">
+        <item name="android:layout_margin">16dp</item>
+    </style>
 </resources>

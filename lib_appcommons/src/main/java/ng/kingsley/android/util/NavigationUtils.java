@@ -3,6 +3,7 @@ package ng.kingsley.android.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -12,7 +13,8 @@ import android.view.inputmethod.InputMethodManager;
  */
 public class NavigationUtils {
 
-    public static void hideSoftInput(Context context, View anchor) {
+    public static void hideSoftInput(@NonNull View anchor) {
+        Context context = anchor.getContext();
         InputMethodManager iMan = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         iMan.hideSoftInputFromWindow(anchor.getWindowToken(), 0);
     }

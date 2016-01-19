@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,24 +31,22 @@ public class BaseSupportFragment extends Fragment {
     }
 
     @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if (savedViewState != null) {
-            onRestoreViewState(savedViewState);
-        }
+        onRestoreViewState(savedViewState);
     }
 
-    protected void onRestoreViewState(@NonNull Bundle savedViewState) {
+    protected void onRestoreViewState(@Nullable Bundle savedViewState) {
 
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (savedViewState == null) {
-            savedViewState = new Bundle();
+        if (getView() != null) {
+            if (savedViewState == null) savedViewState = new Bundle();
+            onSaveViewState(savedViewState);
         }
-        onSaveViewState(savedViewState);
     }
 
     protected void onSaveViewState(@NonNull Bundle savedViewState) {

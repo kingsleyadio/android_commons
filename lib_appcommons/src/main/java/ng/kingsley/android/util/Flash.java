@@ -24,12 +24,18 @@ public class Flash {
     }
 
     private void show(CharSequence message, int duration) {
+        if (mToast.getView().isShown()) {
+            mToast.cancel();
+        }
         mToast.setText(message);
         mToast.setDuration(duration);
         mToast.show();
     }
 
     private void show(@StringRes int resId, int duration) {
+        if (mToast.getView().isShown()) {
+            mToast.cancel();
+        }
         mToast.setText(resId);
         mToast.setDuration(duration);
         mToast.show();

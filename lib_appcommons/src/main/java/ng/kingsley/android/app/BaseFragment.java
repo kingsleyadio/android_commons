@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 /**
@@ -31,24 +32,24 @@ public class BaseFragment extends Fragment {
     }
 
     @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if (savedViewState != null) {
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getView() != null) {
             onRestoreViewState(savedViewState);
         }
     }
 
-    protected void onRestoreViewState(@NonNull Bundle savedViewState) {
+    protected void onRestoreViewState(@Nullable Bundle savedViewState) {
 
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (savedViewState == null) {
-            savedViewState = new Bundle();
+        if (getView() != null) {
+            if (savedViewState == null) savedViewState = new Bundle();
+            onSaveViewState(savedViewState);
         }
-        onSaveViewState(savedViewState);
     }
 
     protected void onSaveViewState(@NonNull Bundle savedViewState) {

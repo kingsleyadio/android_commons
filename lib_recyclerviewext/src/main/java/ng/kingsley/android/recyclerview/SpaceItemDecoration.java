@@ -2,6 +2,7 @@ package ng.kingsley.android.recyclerview;
 
 import android.graphics.Rect;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
@@ -48,6 +49,10 @@ public class SpaceItemDecoration extends android.support.v7.widget.RecyclerView.
             return ((GridLayoutManager) manager).getSpanCount();
         } else if (manager instanceof StaggeredGridLayoutManager) {
             return ((StaggeredGridLayoutManager) manager).getSpanCount();
+        } else if (manager instanceof LinearLayoutManager) {
+            if (((LinearLayoutManager) manager).getOrientation() == LinearLayoutManager.HORIZONTAL) {
+                return manager.getChildCount();
+            }
         }
         return 1;
     }
