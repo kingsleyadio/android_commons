@@ -61,7 +61,7 @@ public class BaseActivity extends AppCompatActivity {
             mToggle = new ActionBarDrawerToggle(this,
               mDrawer, R.string.app_name, R.string.app_name);
             mToggle.setDrawerIndicatorEnabled(true);
-            mDrawer.setDrawerListener(mToggle);
+            mDrawer.addDrawerListener(mToggle);
             mDrawer.post(new Runnable() {
                 @Override
                 public void run() {

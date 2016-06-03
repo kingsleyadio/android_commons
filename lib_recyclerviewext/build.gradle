@@ -20,18 +20,18 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.2.1'
-    compile 'com.android.support:recyclerview-v7:23.2.1'
+    compile "com.android.support:appcompat-v7:$support_version"
+    compile "com.android.support:recyclerview-v7:$support_version"
 }
 
 
 apply plugin: 'maven'
 uploadArchives {
     repositories.mavenDeployer {
-        repository(url: "file:///tmp/maven/")
+        repository(url: "file://${System.env.HOME}/.m2/repository")
 
         pom.groupId = "ng.kingsley.android"
         pom.artifactId = "recyclerview-ext"
-        pom.version = "1.0"
+        pom.version = "1.0.1"
     }
 }

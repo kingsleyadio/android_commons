@@ -9,11 +9,14 @@ import android.content.Context;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 /**
  * @author ADIO Kingsley O.
  * @since 29 Sep, 2015
  */
-public abstract class ContextFutureCallback<T> implements FutureCallback<T> {
+public abstract class ContextFutureCallback<T> implements FutureCallback<T>, RetrofitCallback<T> {
 
     private WeakReference<Context> cReference;
     private WeakReference<Fragment> fReference;
@@ -64,14 +67,32 @@ public abstract class ContextFutureCallback<T> implements FutureCallback<T> {
         return f != null && f.isAdded();
     }
 
+    public boolean shouldProceed() {
+        return (cReference != null && checkContext())
+          || (fReference != null && checkFragment())
+          || (sReference != null && checkSupportFragment());
+    }
+
     @Override
     public void onCompleted(Exception e, T result) {
-        if ((cReference != null && checkContext())
-          || (fReference != null && checkFragment())
-          || (sReference != null && checkSupportFragment())) {
+        if (shouldProceed()) {
             onComplete(e, result);
         }
     }
 
     public abstract void onComplete(Exception e, T result);
+
+    @Override
+    public void onResponse(Call<T> call, Response<T> response) {
+        if (shouldProceed()) {
+            onComplete(null, response.body());
+        }
+    }
+
+    @Override
+    public void onFailure(Call<T> call, Throwable t) {
+        if (shouldProceed()) {
+            onComplete(new Exception(t), null);
+        }
+    }
 }
