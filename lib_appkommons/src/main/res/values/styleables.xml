@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="HeaderView">
+        <attr name="headerTitle"
+            format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="DatetimeView">
+        <attr name="android:hint" />
+        <attr name="displayMode"
+            format="enum">
+            <enum name="dateOnly"
+                value="0" />
+            <enum name="timeOnly"
+                value="1" />
+            <enum name="dateTime"
+                value="2" />
+        </attr>
+    </declare-styleable>
+
+</resources>

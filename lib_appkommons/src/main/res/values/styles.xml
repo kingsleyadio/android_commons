@@ -1,0 +1,8 @@
+<resources>
+
+    <!--Custom Widgets-->
+    <style name="HeaderView" />
+
+    <style name="DatetimeView" />
+
+</resources>

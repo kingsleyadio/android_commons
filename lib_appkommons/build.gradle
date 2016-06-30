@@ -1,11 +1,12 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
 
     defaultConfig {
-        minSdkVersion 10
+        minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
         versionName "$lib_version"
@@ -16,12 +17,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:appcompat-v7:$support_version"
-    compile "com.android.support:recyclerview-v7:$support_version"
+    compile "ng.kingsley.android:appcommons:$lib_version"
+    compile "com.android.support:cardview-v7:$support_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    testCompile 'junit:junit:4.12'
 }
 
 
@@ -31,7 +39,7 @@ uploadArchives {
         repository(url: "file://${System.env.HOME}/.m2/repository")
 
         pom.groupId = "ng.kingsley.android"
-        pom.artifactId = "recyclerview-ext"
+        pom.artifactId = "appkommons"
         pom.version = "$lib_version"
     }
 }

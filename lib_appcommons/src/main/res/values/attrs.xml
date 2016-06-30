@@ -16,4 +16,8 @@
         <attr name="contentTopClearance"
             format="dimension" />
     </declare-styleable>
+
+    <!--Other-->
+    <attr name="fontPath" />
+
 </resources>
