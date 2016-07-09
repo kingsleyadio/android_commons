@@ -108,7 +108,7 @@ public class BaseActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    protected void addSupportFragment(android.support.v4.app.Fragment fragment,
+    protected void addFragment(android.support.v4.app.Fragment fragment,
       boolean addToBackstack, boolean detachExisting) {
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
           .beginTransaction()
