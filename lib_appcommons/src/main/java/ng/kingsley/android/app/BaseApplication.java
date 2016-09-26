@@ -1,6 +1,8 @@
 package ng.kingsley.android.app;
 
+import android.app.Activity;
 import android.app.Application;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.koushikdutta.ion.Ion;
@@ -37,6 +39,8 @@ public abstract class BaseApplication<T extends ApplicationComponent> extends Ap
         if (BuildConfig.DEBUG) {
             ionConfig.setLogging("API", Log.VERBOSE);
         }
+
+        registerActivityLifecycleCallbacks(new AppStateMonitor());
     }
 
     protected com.google.gson.Gson createGson() {
@@ -54,4 +58,46 @@ public abstract class BaseApplication<T extends ApplicationComponent> extends Ap
     public T getComponent() {
         return this.mComponent;
     }
+
+
+    //region Application States
+
+    private static class AppStateMonitor implements ActivityLifecycleCallbacks {
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            AppManager.createdActivitiesCounter++;
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            AppManager.startedActivitiesCounter++;
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+            AppManager.resumedActivitiesCounter++;
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+            AppManager.resumedActivitiesCounter--;
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            AppManager.startedActivitiesCounter--;
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            AppManager.createdActivitiesCounter--;
+        }
+    }
+    //endregion
 }
