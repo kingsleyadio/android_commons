@@ -1,8 +1,6 @@
 package ng.kingsley.android.app;
 
-import android.app.Activity;
 import android.app.Application;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.koushikdutta.ion.Ion;
@@ -28,9 +26,9 @@ public abstract class BaseApplication<T extends ApplicationComponent> extends Ap
         mComponent = createComponent();
         mGson = createGson();
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-            .setDefaultFontPath(getString(R.string.font_default))
-            .setFontAttrId(R.attr.fontPath)
-            .build()
+          .setDefaultFontPath(getString(R.string.font_default))
+          .setFontAttrId(R.attr.fontPath)
+          .build()
         );
         Ion.Config ionConfig = Ion.getDefault(this).configure();
         ionConfig.setGson(mGson);
@@ -40,7 +38,7 @@ public abstract class BaseApplication<T extends ApplicationComponent> extends Ap
             ionConfig.setLogging("API", Log.VERBOSE);
         }
 
-        registerActivityLifecycleCallbacks(new AppStateMonitor());
+        registerActivityLifecycleCallbacks(AppManager.MONITOR);
     }
 
     protected com.google.gson.Gson createGson() {
@@ -58,46 +56,4 @@ public abstract class BaseApplication<T extends ApplicationComponent> extends Ap
     public T getComponent() {
         return this.mComponent;
     }
-
-
-    //region Application States
-
-    private static class AppStateMonitor implements ActivityLifecycleCallbacks {
-
-        @Override
-        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-            AppManager.createdActivitiesCounter++;
-        }
-
-        @Override
-        public void onActivityStarted(Activity activity) {
-            AppManager.startedActivitiesCounter++;
-        }
-
-        @Override
-        public void onActivityResumed(Activity activity) {
-            AppManager.resumedActivitiesCounter++;
-        }
-
-        @Override
-        public void onActivityPaused(Activity activity) {
-            AppManager.resumedActivitiesCounter--;
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-            AppManager.startedActivitiesCounter--;
-        }
-
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-        }
-
-        @Override
-        public void onActivityDestroyed(Activity activity) {
-            AppManager.createdActivitiesCounter--;
-        }
-    }
-    //endregion
 }

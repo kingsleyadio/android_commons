@@ -1,9 +1,11 @@
 package ng.kingsley.android.app;
 
+import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Application;
 import android.content.Context;
 import android.os.Build;
-import android.os.Process;
+import android.os.Bundle;
 
 import java.util.List;
 
@@ -17,48 +19,48 @@ import ng.kingsley.android.util.NavigationUtils;
 
 public class AppManager {
 
+    private static final String TAG = AppManager.class.getSimpleName();
+
+    public static final AppManager.Monitor MONITOR = new Monitor();
+
     private AppManager() {
     }
 
-    private static final String TAG = AppManager.class.getSimpleName();
-
-    static int createdActivitiesCounter = 0;
-    static int startedActivitiesCounter = 0;
-    static int resumedActivitiesCounter = 0;
-
     public static int createdActivitiesCount() {
-        return createdActivitiesCounter;
+        return MONITOR.createdActivitiesCounter;
     }
 
     public static int startedActivitiesCount() {
-        return startedActivitiesCounter;
+        return MONITOR.startedActivitiesCounter;
     }
 
     public static int resumedActivitiesCount() {
-        return resumedActivitiesCounter;
+        return MONITOR.resumedActivitiesCounter;
     }
 
     public static boolean isAppInForeground() {
-        return resumedActivitiesCounter > 0;
+        return MONITOR.resumedActivitiesCounter > 0;
     }
 
     public static boolean areActivitiesStarted() {
-        return startedActivitiesCounter > 0;
+        return MONITOR.startedActivitiesCounter > 0;
     }
 
     public static boolean isAppLaunched() {
-        return createdActivitiesCounter > 0;
+        return MONITOR.createdActivitiesCounter > 0;
     }
 
     public static void finishAllActivities(Context context) {
-        ActivityManager aMan = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        Context appContext = context.getApplicationContext();
+        ActivityManager aMan = (ActivityManager) appContext.getSystemService(Context.ACTIVITY_SERVICE);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             List<ActivityManager.AppTask> appTasks = aMan.getAppTasks();
             for (ActivityManager.AppTask task : appTasks) {
                 task.finishAndRemoveTask();
             }
         } else {
-            NavigationUtils.badgeActivity(context, ShutdownCompatActivity.class);
+            NavigationUtils.badgeActivity(appContext, ShutdownCompatActivity.class);
         }
     }
 
@@ -78,7 +80,54 @@ public class AppManager {
     }
 
     public static void killApp() {
-        Process.sendSignal(Process.myPid(), Process.SIGNAL_QUIT);
-//        System.exit(0);
+        System.exit(0);
     }
+
+
+    //region Activity Lifecycle Monitor
+    private static class Monitor implements Application.ActivityLifecycleCallbacks {
+
+        private int createdActivitiesCounter = 0;
+        private int startedActivitiesCounter = 0;
+        private int resumedActivitiesCounter = 0;
+
+        private Monitor() {
+        }
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            createdActivitiesCounter++;
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            startedActivitiesCounter++;
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+            resumedActivitiesCounter++;
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+            resumedActivitiesCounter--;
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            startedActivitiesCounter--;
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            createdActivitiesCounter--;
+        }
+    }
+    //endregion
 }
