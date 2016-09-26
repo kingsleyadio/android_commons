@@ -13,6 +13,9 @@ import android.view.inputmethod.InputMethodManager;
  */
 public class NavigationUtils {
 
+    private NavigationUtils() {
+    }
+
     public static void hideSoftInput(@NonNull View anchor) {
         Context context = anchor.getContext();
         InputMethodManager iMan = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);

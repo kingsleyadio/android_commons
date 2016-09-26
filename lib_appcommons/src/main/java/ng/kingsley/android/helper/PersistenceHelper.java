@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -65,6 +67,26 @@ public class PersistenceHelper {
     public <T> T retrieve(String key, Class<T> clas, T defaultValue) {
         return retrieve(null, key, clas, defaultValue);
     }
+
+    public <T> T retrieve(String domain, String key, Type type) {
+        SharedPreferences pref = mContext.getSharedPreferences(getName(mContext, domain), Context.MODE_PRIVATE);
+        String object = pref.getString(key, null);
+        return GSON.fromJson(object, type);
+    }
+
+    public <T> T retrieve(String key, Type type) {
+        return retrieve(null, key, type);
+    }
+
+    public <T> T retrieve(String domain, String key, Type type, T defaultValue) {
+        T object = retrieve(domain, key, type);
+        return (object == null) ? defaultValue : object;
+    }
+
+    public <T> T retrieve(String key, Type type, T defaultValue) {
+        return retrieve(null, key, type, defaultValue);
+    }
+
 
     public void wipe(String domain, String key) {
         SharedPreferences.Editor editor = mContext.getSharedPreferences(getName(mContext, domain),
