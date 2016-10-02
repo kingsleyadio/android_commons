@@ -32,7 +32,7 @@ public class AppManager {
     public static final AppManager.Monitor MONITOR = new Monitor();
 
     public static final int STATE_LAUNCHING = 1;
-    public static final int STATE_FINISHING = 2;
+    public static final int STATE_QUITTING = 2;
     public static final int STATE_FOREGROUND = 3;
     public static final int STATE_BACKGROUND = 4;
 
@@ -110,7 +110,7 @@ public class AppManager {
         void onStateChanged(@State int newState);
     }
 
-    @IntDef({STATE_LAUNCHING, STATE_FINISHING, STATE_FOREGROUND, STATE_BACKGROUND})
+    @IntDef({STATE_LAUNCHING, STATE_QUITTING, STATE_FOREGROUND, STATE_BACKGROUND})
     @Retention(RetentionPolicy.SOURCE)
     public @interface State {
     }
@@ -131,8 +131,8 @@ public class AppManager {
                     case STATE_LAUNCHING:
                         dispatchStateChange(STATE_LAUNCHING);
                         break;
-                    case STATE_FINISHING:
-                        dispatchStateChange(STATE_FINISHING);
+                    case STATE_QUITTING:
+                        dispatchStateChange(STATE_QUITTING);
                         break;
                     case STATE_BACKGROUND:
                         dispatchStateChange(STATE_BACKGROUND);
@@ -218,7 +218,7 @@ public class AppManager {
         public void onActivityDestroyed(Activity activity) {
             if (--createdActivitiesCounter == 0) {
                 mHandler.removeMessages(STATE_BACKGROUND);
-                mHandler.sendEmptyMessage(STATE_FINISHING);
+                mHandler.sendEmptyMessage(STATE_QUITTING);
             }
         }
     }
