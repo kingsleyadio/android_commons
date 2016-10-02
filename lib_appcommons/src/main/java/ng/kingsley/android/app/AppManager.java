@@ -6,8 +6,16 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.support.annotation.IntDef;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import ng.kingsley.android.util.Log;
 import ng.kingsley.android.util.NavigationUtils;
@@ -22,6 +30,11 @@ public class AppManager {
     private static final String TAG = AppManager.class.getSimpleName();
 
     public static final AppManager.Monitor MONITOR = new Monitor();
+
+    public static final int STATE_LAUNCHING = 1;
+    public static final int STATE_FINISHING = 2;
+    public static final int STATE_FOREGROUND = 3;
+    public static final int STATE_BACKGROUND = 4;
 
     private AppManager() {
     }
@@ -48,6 +61,14 @@ public class AppManager {
 
     public static boolean isAppLaunched() {
         return MONITOR.createdActivitiesCounter > 0;
+    }
+
+    public static void registerStateListener(StateListener listener) {
+        MONITOR.registerStateListener(listener);
+    }
+
+    public static void unregisterStateListener(StateListener listener) {
+        MONITOR.unregisterStateListener(listener);
     }
 
     public static void finishAllActivities(Context context) {
@@ -84,19 +105,81 @@ public class AppManager {
     }
 
 
+    public interface StateListener {
+
+        void onStateChanged(@State int newState);
+    }
+
+    @IntDef({STATE_LAUNCHING, STATE_FINISHING, STATE_FOREGROUND, STATE_BACKGROUND})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface State {
+    }
+
+
     //region Activity Lifecycle Monitor
     private static class Monitor implements Application.ActivityLifecycleCallbacks {
 
-        private int createdActivitiesCounter = 0;
-        private int startedActivitiesCounter = 0;
-        private int resumedActivitiesCounter = 0;
+        int createdActivitiesCounter = 0;
+        int startedActivitiesCounter = 0;
+        int resumedActivitiesCounter = 0;
+
+        private Handler mHandler = new Handler(Looper.getMainLooper()) {
+
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case STATE_LAUNCHING:
+                        dispatchStateChange(STATE_LAUNCHING);
+                        break;
+                    case STATE_FINISHING:
+                        dispatchStateChange(STATE_FINISHING);
+                        break;
+                    case STATE_BACKGROUND:
+                        dispatchStateChange(STATE_BACKGROUND);
+                        break;
+                    case STATE_FOREGROUND:
+                        dispatchStateChange(STATE_FOREGROUND);
+                }
+            }
+        };
+        private final Set<StateListener> stateListeners = new HashSet<>();
 
         private Monitor() {
         }
 
+        void registerStateListener(StateListener listener) {
+            synchronized (stateListeners) {
+                stateListeners.add(listener);
+            }
+        }
+
+        void unregisterStateListener(StateListener listener) {
+            synchronized (stateListeners) {
+                stateListeners.remove(listener);
+            }
+        }
+
+        private void dispatchStateChange(int newState) {
+            StateListener[] listeners = null;
+            synchronized (stateListeners) {
+                int size = stateListeners.size();
+                if (size > 0) {
+                    listeners = stateListeners.toArray(new StateListener[size]);
+                }
+            }
+
+            if (listeners != null) {
+                for (StateListener listener : listeners) {
+                    listener.onStateChanged(newState);
+                }
+            }
+        }
+
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-            createdActivitiesCounter++;
+            if (++createdActivitiesCounter == 1) {
+                mHandler.sendEmptyMessage(STATE_LAUNCHING);
+            }
         }
 
         @Override
@@ -106,12 +189,19 @@ public class AppManager {
 
         @Override
         public void onActivityResumed(Activity activity) {
-            resumedActivitiesCounter++;
+            if (++resumedActivitiesCounter == 1) {
+                if (mHandler.hasMessages(STATE_BACKGROUND)) {
+                    mHandler.removeMessages(STATE_BACKGROUND);
+
+                } else mHandler.sendEmptyMessage(STATE_FOREGROUND);
+            }
         }
 
         @Override
         public void onActivityPaused(Activity activity) {
-            resumedActivitiesCounter--;
+            if (--resumedActivitiesCounter == 0) {
+                mHandler.sendEmptyMessageDelayed(STATE_BACKGROUND, 500);
+            }
         }
 
         @Override
@@ -126,7 +216,10 @@ public class AppManager {
 
         @Override
         public void onActivityDestroyed(Activity activity) {
-            createdActivitiesCounter--;
+            if (--createdActivitiesCounter == 0) {
+                mHandler.removeMessages(STATE_BACKGROUND);
+                mHandler.sendEmptyMessage(STATE_FINISHING);
+            }
         }
     }
     //endregion
