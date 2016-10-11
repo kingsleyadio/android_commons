@@ -25,13 +25,10 @@ dependencies {
 }
 
 
-apply plugin: 'maven'
-uploadArchives {
-    repositories.mavenDeployer {
-        repository(url: "file://${System.env.HOME}/.m2/repository")
-
-        pom.groupId = "ng.kingsley.android"
-        pom.artifactId = "recyclerview-ext"
-        pom.version = "$lib_version"
-    }
+ext {
+    pomArtifactId = 'recyclerview-ext'
+    pomArtifactName = 'RecyclerView Extension'
+    pomArtifactDescription = 'A simple library that adds some sweet on top of the vanilla RecyclerView'
 }
+
+apply from: '../publishing.gradle'

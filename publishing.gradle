@@ -1,0 +1,77 @@
+apply plugin: 'maven'
+
+/*ext {
+    pomVersion = lib_version
+    pomGroupId = 'ng.kingsley.android'
+    // pomArtifactId, pomArtifactName, pomArtifactDescription
+
+    pomSiteUrl = 'https://github.com/kingsleyadio/android_commons'
+    pomGitUrl = 'https://github.com/kingsleyadio/android_commons.git'
+
+    pomLicenses = {
+        license {
+            name 'The Apache Software License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+        }
+    }
+
+    pomDevelopers = {
+        developer {
+            id 'kingsleyadio'
+            name 'Kingsley Adio'
+            email 'adiksonline@gmail.com'
+            // organization, organizationUrl
+        }
+    }
+}*/
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    failOnError false
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: repositories.mavenLocal().url)
+
+        pom {
+            groupId = pomGroupId
+            artifactId = pomArtifactId
+            version = pomVersion
+        }
+
+        pom.project {
+            packaging 'aar'
+
+            name pomArtifactName
+            description pomArtifactDescription
+
+            url pomSiteUrl
+
+            licenses(pomLicenses)
+            developers(pomDevelopers)
+
+            scm {
+                connection = pomGitUrl
+                developerConnection = pomGitUrl
+                url = pomSiteUrl
+            }
+        }
+    }
+}

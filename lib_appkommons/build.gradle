@@ -33,13 +33,10 @@ dependencies {
 }
 
 
-apply plugin: 'maven'
-uploadArchives {
-    repositories.mavenDeployer {
-        repository(url: "file://${System.env.HOME}/.m2/repository")
-
-        pom.groupId = "ng.kingsley.android"
-        pom.artifactId = "appkommons"
-        pom.version = "$lib_version"
-    }
+ext {
+    pomArtifactId = 'appkommons'
+    pomArtifactName = 'Android AppKommons'
+    pomArtifactDescription = 'Complement and sugar on top of AppCommons written in Kotlin'
 }
+
+apply from: '../publishing.gradle'

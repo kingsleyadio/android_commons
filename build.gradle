@@ -1,19 +1,47 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.lib_version = '1.0.2'
-    ext.kotlin_version = '1.0.4'
-    ext.support_version = '24.2.1'
-    ext.okhttp_version = '3.3.1'
-    ext.retrofit_version = '2.1.0'
-    ext.dagger_version = '2.4'
-    ext.butterknife_version = '8.1.0'
+
+    ext {
+        lib_version = '1.0.2'
+        kotlin_version = '1.0.4'
+        support_version = '24.2.1'
+        okhttp_version = '3.3.1'
+        retrofit_version = '2.1.0'
+        dagger_version = '2.4'
+        butterknife_version = '8.1.0'
+    }
+
+    ext {
+        pomVersion = lib_version
+        pomGroupId = 'ng.kingsley.android'
+        // pomArtifactId, pomArtifactName, pomArtifactDescription
+
+        pomSiteUrl = 'https://github.com/kingsleyadio/android_commons'
+        pomGitUrl = 'https://github.com/kingsleyadio/android_commons.git'
+
+        pomLicenses = {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            }
+        }
+
+        pomDevelopers = {
+            developer {
+                id 'kingsleyadio'
+                name 'Kingsley Adio'
+                email 'adiksonline@gmail.com'
+                // organization, organizationUrl
+            }
+        }
+    }
 
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.android.tools.build:gradle:2.2.1'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 

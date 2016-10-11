@@ -39,14 +39,10 @@ dependencies {
     apt "com.google.dagger:dagger-compiler:$dagger_version"
 }
 
-
-apply plugin: 'maven'
-uploadArchives {
-    repositories.mavenDeployer {
-        repository(url: "file://${System.env.HOME}/.m2/repository")
-
-        pom.groupId = "ng.kingsley.android"
-        pom.artifactId = "appcommons"
-        pom.version = "$lib_version"
-    }
+ext {
+    pomArtifactId = 'appcommons'
+    pomArtifactName = 'Android AppCommons'
+    pomArtifactDescription = 'Carefully handpicked content to quickly bootstrap an Android project'
 }
+
+apply from: '../publishing.gradle'
