@@ -1,12 +1,13 @@
 apply plugin: 'maven'
 
-/*ext {
+/*
+ext {
     pomVersion = lib_version
-    pomGroupId = 'ng.kingsley.android'
+    pomGroupId = '*'
     // pomArtifactId, pomArtifactName, pomArtifactDescription
 
-    pomSiteUrl = 'https://github.com/kingsleyadio/android_commons'
-    pomGitUrl = 'https://github.com/kingsleyadio/android_commons.git'
+    pomSiteUrl = '*'
+    pomGitUrl = '*.git'
 
     pomLicenses = {
         license {
@@ -17,13 +18,16 @@ apply plugin: 'maven'
 
     pomDevelopers = {
         developer {
-            id 'kingsleyadio'
-            name 'Kingsley Adio'
-            email 'adiksonline@gmail.com'
+            id '*'
+            name '*'
+            email '*'
             // organization, organizationUrl
         }
     }
-}*/
+}
+apply from: 'publishing.gradle'
+$ gradle uploadArchives
+*/
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
@@ -46,9 +50,33 @@ artifacts {
     archives sourcesJar
 }
 
+//noinspection UnnecessaryQualifiedReference
+@groovy.transform.Field def props = new Properties()
+props.load(rootProject.file('local.properties').newDataInputStream())
+
+def prop(String key) {
+    if (props.containsKey(key)) return props.getProperty(key)
+    else return System.getenv(key.replace('.', '_'))
+}
+
 uploadArchives {
+    // Authentication
+    def username = prop("nexus.username")
+    def password = prop("nexus.password")
+    def repositoryUrl = prop("nexus.repository")
+
+    println "Project: $project.path"
+    println "Username: $username"
+    println "Repo URL: $repositoryUrl"
+
     repositories.mavenDeployer {
-        repository(url: repositories.mavenLocal().url)
+        if (repositoryUrl != null) {
+            repository(url: repositoryUrl) {
+                authentication(userName: username, password: password)
+            }
+        } else {
+            repository(url: repositories.mavenLocal().url)
+        }
 
         pom {
             groupId = pomGroupId
