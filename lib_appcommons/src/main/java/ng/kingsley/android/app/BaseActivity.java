@@ -4,17 +4,18 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 
 import ng.kingsley.android.appcommons.R;
-import ng.kingsley.android.util.ResourceUtils;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
@@ -22,8 +23,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * @since 05 Jun, 2015
  */
 public class BaseActivity extends AppCompatActivity {
-
-    private String TAG = BaseActivity.class.getSimpleName();
 
     protected Toolbar mToolbar;
     protected DrawerLayout mDrawer;
@@ -53,8 +52,7 @@ public class BaseActivity extends AppCompatActivity {
         mDrawer = (DrawerLayout) findViewById(R.id.drawer);
         if (mDrawer != null) {
             View side = mDrawer.findViewById(R.id.navigation_view);
-            int possibleMinDrawerWidth = ResourceUtils.getScreenSize(this)[0] -
-              ResourceUtils.attrToDimenPx(this, R.attr.actionBarSize);
+            int possibleMinDrawerWidth = getScreenSize(this)[0] - attrToDimenPx(this, R.attr.actionBarSize);
             int maxDrawerWidth = getResources().getDimensionPixelSize(R.dimen.navigation_drawer_max_width);
             side.getLayoutParams().width = Math.min(possibleMinDrawerWidth, maxDrawerWidth);
 
@@ -95,7 +93,7 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected void addFragment(Fragment fragment, boolean addToBackstack, boolean detachExisting) {
+    protected void presentFragment(Fragment fragment, boolean addToBackstack, boolean detachExisting) {
         FragmentTransaction transaction = getFragmentManager()
           .beginTransaction()
           .add(R.id.container, fragment);
@@ -108,7 +106,7 @@ public class BaseActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    protected void addFragment(android.support.v4.app.Fragment fragment,
+    protected void presentFragment(android.support.v4.app.Fragment fragment,
       boolean addToBackstack, boolean detachExisting) {
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
           .beginTransaction()
@@ -125,6 +123,23 @@ public class BaseActivity extends AppCompatActivity {
     protected boolean hasPermission(String permission) {
         return ContextCompat.checkSelfPermission(this, permission)
           == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private static int attrToDimenPx(Context context, int attr) {
+        TypedArray a = null;
+        try {
+            a = context.getTheme().obtainStyledAttributes(new int[]{attr});
+            return a.getDimensionPixelSize(0, 0);
+        } finally {
+            if (a != null) {
+                a.recycle();
+            }
+        }
+    }
+
+    private static int[] getScreenSize(Context context) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return new int[]{metrics.widthPixels, metrics.heightPixels};
     }
 
     /**
