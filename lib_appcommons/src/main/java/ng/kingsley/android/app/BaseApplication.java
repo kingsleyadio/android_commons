@@ -1,11 +1,7 @@
 package ng.kingsley.android.app;
 
 import android.app.Application;
-import android.util.Log;
 
-import com.koushikdutta.ion.Ion;
-
-import ng.kingsley.android.appcommons.BuildConfig;
 import ng.kingsley.android.appcommons.R;
 import ng.kingsley.android.dagger.components.ApplicationComponent;
 import ng.kingsley.android.util.Inputs;
@@ -30,15 +26,8 @@ public abstract class BaseApplication<T extends ApplicationComponent> extends Ap
           .setFontAttrId(R.attr.fontPath)
           .build()
         );
-        Ion.Config ionConfig = Ion.getDefault(this).configure();
-        ionConfig.setGson(mGson);
-        ionConfig.disableProxy();
-        ionConfig.disableSecureProxy();
-        if (BuildConfig.DEBUG) {
-            ionConfig.setLogging("API", Log.VERBOSE);
-        }
 
-        registerActivityLifecycleCallbacks(AppManager.MONITOR);
+        AppManager.register(this);
     }
 
     protected com.google.gson.Gson createGson() {

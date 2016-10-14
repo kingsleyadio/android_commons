@@ -1,5 +1,6 @@
 package ng.kingsley.android.app;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
@@ -29,14 +30,30 @@ public class AppManager {
 
     private static final String TAG = AppManager.class.getSimpleName();
 
-    public static final AppManager.Monitor MONITOR = new Monitor();
+    private static final AppManager.Monitor MONITOR = new Monitor();
 
     public static final int STATE_LAUNCHING = 1;
     public static final int STATE_QUITTING = 2;
     public static final int STATE_FOREGROUND = 3;
     public static final int STATE_BACKGROUND = 4;
 
+    @SuppressLint("StaticFieldLeak")
+    private static Context appContext;
+
     private AppManager() {
+    }
+
+    public static void register(Application app) {
+        if (appContext != null) {
+            Log.w(TAG, "AppManager already registered!");
+            return;
+        }
+        app.registerActivityLifecycleCallbacks(MONITOR);
+        appContext = app;
+    }
+
+    public static Context applicationContext() {
+        return appContext;
     }
 
     public static int createdActivitiesCount() {
@@ -71,8 +88,7 @@ public class AppManager {
         MONITOR.unregisterStateListener(listener);
     }
 
-    public static void finishAllActivities(Context context) {
-        Context appContext = context.getApplicationContext();
+    public static void finishAllActivities() {
         ActivityManager aMan = (ActivityManager) appContext.getSystemService(Context.ACTIVITY_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -85,14 +101,14 @@ public class AppManager {
         }
     }
 
-    public static boolean clearAppData(Context context) {
-        ActivityManager aMan = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+    public static boolean clearAppData() {
+        ActivityManager aMan = (ActivityManager) appContext.getSystemService(Context.ACTIVITY_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             return aMan.clearApplicationUserData();
         } else try {
             // Fallback hack to clear app data
             Runtime runtime = Runtime.getRuntime();
-            runtime.exec("pm clear " + context.getPackageName());
+            runtime.exec("pm clear " + appContext.getPackageName());
             return true;
         } catch (Exception e) {
             Log.e(TAG, "Unable to clear application data", e);
