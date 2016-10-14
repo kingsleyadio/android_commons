@@ -12,7 +12,7 @@ import android.widget.TextView
 import ng.kingsley.android.appkommons.R
 import ng.kingsley.android.extensions.setTintedCompoundDrawables
 import ng.kingsley.android.util.Inputs
-import java.util.*
+import java.util.Date
 
 /**
  * @author ADIO Kingsley O.
