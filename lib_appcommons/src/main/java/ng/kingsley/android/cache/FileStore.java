@@ -14,7 +14,7 @@ import ng.kingsley.android.util.Log;
  * @author ADIO Kingsley O.
  * @since 14 Oct, 2016
  */
-class FileStore {
+public class FileStore {
     private static final String TAG = FileStore.class.getSimpleName();
 
     private static final int VALUE_COUNT = 1;

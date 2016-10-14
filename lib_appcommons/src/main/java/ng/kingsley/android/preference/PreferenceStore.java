@@ -15,7 +15,7 @@ import ng.kingsley.android.util.DigestUtils;
  * @since 14 Oct, 2016
  */
 
-class PreferenceStore {
+public class PreferenceStore {
 
     private SharedPreferences pref;
     private Gson gson;
