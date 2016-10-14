@@ -1,0 +1,158 @@
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: "com.jfrog.bintray"
+
+/*
+ext {
+    pomPackageName = ''
+    pomPackageDescription = ''
+    pomPackageLicenses = ["Apache-2.0"]
+    pomVersion = lib_version
+    pomGroupId = '*'
+    // pomArtifactId, pomArtifactName, pomArtifactDescription
+
+    pomSiteUrl = '*'
+    pomGitUrl = '*.git'
+
+    pomLicenses = {
+        license {
+            name 'The Apache Software License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+        }
+    }
+
+    pomDevelopers = {
+        developer {
+            id '*'
+            name '*'
+            email '*'
+            // organization, organizationUrl
+        }
+    }
+}
+
+local.properties
+----
+bintray.user
+bintray.apikey
+bintray.gpg.passphrase
+bintray.central.sync
+nexus.username
+nexus.password
+
+apply from: 'publishing_bintray.gradle'
+$ gradle bintrayUpload
+*/
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    failOnError false
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+def prop(String key) {
+    if (props.containsKey(key)) return props.getProperty(key)
+    else return System.getenv(key.replace('.', '_'))
+}
+
+version = pomVersion
+group = pomGroupId
+
+def pomDesc = pomArtifactDescription ?: pomArtifactName
+
+install {
+
+    repositories.mavenInstaller {
+
+        pom {
+            groupId = pomGroupId
+            artifactId = pomArtifactId
+            version = pomVersion
+        }
+
+        pom.project {
+            packaging 'aar'
+
+            name pomArtifactName
+            description pomDesc
+
+            url pomSiteUrl
+
+            licenses(pomLicenses)
+            developers(pomDevelopers)
+
+            scm {
+                connection = pomGitUrl
+                developerConnection = pomGitUrl
+                url = pomSiteUrl
+            }
+        }
+    }
+}
+
+//noinspection UnnecessaryQualifiedReference
+@groovy.transform.Field def props = new Properties()
+def propsFile = rootProject.file('local.properties')
+if (propsFile.exists()) {
+    props.load(propsFile.newDataInputStream())
+}
+
+bintray {
+    // Authentication
+    user = prop("bintray.user")
+    key = prop("bintray.apikey")
+
+    println "Project: $project.path"
+
+    configurations = ['archives']
+    publish = true
+
+    pkg {
+
+        def packageName = pomPackageName ?: rootProject.name
+        def packageDesc = pomPackageDescription ?: packageName
+
+        repo = "maven"
+        name = packageName
+        desc = packageDesc
+        websiteUrl = pomSiteUrl
+        vcsUrl = pomGitUrl
+        licenses = pomPackageLicenses ?: []
+
+        version {
+            name = pomVersion
+            desc = packageDesc
+
+            gpg {
+                sign = true
+                passphrase = prop("bintray.gpg.passphrase")
+            }
+
+            def syncCentral = prop("bintray.central.sync")?.toBoolean() ?: false
+            println "Sync to central is ${(syncCentral) ? "ENABLED" : "DISABLED"}"
+
+            mavenCentralSync {
+                sync = syncCentral
+                //Optional (true by default). Determines whether to sync the version to Maven Central.
+                user = prop("nexus.username") //OSS user token
+                password = prop("nexus.password") //OSS user password
+                close = '1'
+                //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+            }
+        }
+    }
+}

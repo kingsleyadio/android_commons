@@ -11,6 +11,9 @@ buildscript {
     }
 
     ext {
+        pomPackageName = 'appcommons'
+        pomPackageDescription = 'Resources for quick bootstrap'
+        pomPackageLicenses = ["Apache-2.0"]
         pomVersion = lib_version
         pomGroupId = 'ng.kingsley.android'
         // pomArtifactId, pomArtifactName, pomArtifactDescription
@@ -41,6 +44,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.1'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong

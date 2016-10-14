@@ -25,6 +25,13 @@ ext {
         }
     }
 }
+
+local.properties
+----
+nexus.username
+nexus.password
+nexus.repository
+
 apply from: 'publishing.gradle'
 $ gradle uploadArchives
 */
@@ -52,7 +59,10 @@ artifacts {
 
 //noinspection UnnecessaryQualifiedReference
 @groovy.transform.Field def props = new Properties()
-props.load(rootProject.file('local.properties').newDataInputStream())
+def propsFile = rootProject.file('local.properties')
+if (propsFile.exists()) {
+    props.load(propsFile.newDataInputStream())
+}
 
 def prop(String key) {
     if (props.containsKey(key)) return props.getProperty(key)
