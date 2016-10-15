@@ -3,16 +3,19 @@
 buildscript {
 
     ext {
-        lib_version = '1.0.3-SNAPSHOT'
+        lib_version = '1.0.3'
         kotlin_version = '1.0.4'
         support_version = '24.2.1'
         retrofit_version = '2.1.0'
         dagger_version = '2.7'
+
+        nexus = "https://raw.githubusercontent.com/kingsleyadio/maven_publishing/master/publishing.gradle"
+        bintray = "https://raw.githubusercontent.com/kingsleyadio/maven_publishing/master/publishing_bintray.gradle"
     }
 
     ext {
         pomPackageName = 'appcommons'
-        pomPackageDescription = 'Resources for quick bootstrap'
+        pomPackageDescription = 'Resources and utilities for quick bootstrap of Android projects'
         pomPackageLicenses = ["Apache-2.0"]
         pomVersion = lib_version
         pomGroupId = 'ng.kingsley.android'

@@ -1,1 +1,3 @@
-include ':lib_appcommons', ':lib_recyclerviewext', ':lib_appkommons'
+include ':appcommons'
+include ':appkommons'
+include ':recyclerview-ext'
