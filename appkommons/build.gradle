@@ -39,4 +39,5 @@ ext {
     pomArtifactDescription = 'Complement and sugar on top of AppCommons written in Kotlin'
 }
 
-apply from: '../publishing.gradle'
+apply from: bintray
+//apply from: nexus

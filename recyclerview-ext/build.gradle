@@ -31,4 +31,5 @@ ext {
     pomArtifactDescription = 'A simple library that adds some sweet on top of the vanilla RecyclerView'
 }
 
-apply from: '../publishing.gradle'
+apply from: bintray
+//apply from: nexus

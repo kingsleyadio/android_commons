@@ -40,4 +40,5 @@ ext {
     pomArtifactDescription = 'Carefully handpicked content to quickly bootstrap an Android project'
 }
 
-apply from: '../publishing.gradle'
+apply from: bintray
+//apply from: nexus
