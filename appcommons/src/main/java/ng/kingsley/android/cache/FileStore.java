@@ -110,6 +110,16 @@ public class FileStore {
         return get(key, new DefaultConverters.ByteArrayConverter());
     }
 
+    public boolean containsKey(String key) {
+        String cacheKey = cacheKey(key);
+        try {
+            return cache.get(cacheKey) != null;
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to peek data. key=" + key, e);
+        }
+        return false;
+    }
+
     public boolean remove(String key) {
         String cacheKey = cacheKey(key);
 

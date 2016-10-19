@@ -103,6 +103,10 @@ public class PreferenceStore {
         return get(key, new DefaultConverters.GsonConverter<>(token, gson));
     }
 
+    public boolean containsKey(String key) {
+        return pref.contains(key);
+    }
+
     public void remove(String key) {
         editor().remove(key).apply();
     }
