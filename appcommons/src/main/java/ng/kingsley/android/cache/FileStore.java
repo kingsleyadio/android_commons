@@ -43,14 +43,16 @@ public class FileStore {
 
         try {
             DiskLruCache.Editor editor = cache.edit(cacheKey);
-            converter.writeToStream(editor.newOutputStream(VALUE_INDEX), content);
-
-            editor.commit();
-            return true;
+            if (editor != null) {
+                converter.writeToStream(editor.newOutputStream(VALUE_INDEX), content);
+                editor.commit();
+                return true;
+            }
         } catch (IOException e) {
             Log.e(TAG, "Failed to put data. key=" + key, e);
-            return false;
         }
+
+        return false;
     }
 
     public boolean putString(String key, String content) {
@@ -78,11 +80,14 @@ public class FileStore {
 
         try {
             DiskLruCache.Snapshot snapshot = cache.get(cacheKey);
-            return converter.readFromStream(snapshot.getInputStream(VALUE_INDEX));
+            if (snapshot != null) {
+                return converter.readFromStream(snapshot.getInputStream(VALUE_INDEX));
+            }
         } catch (IOException e) {
             Log.e(TAG, "Failed to get data. key=" + key, e);
-            return null;
         }
+
+        return null;
     }
 
     public String getString(String key) {
