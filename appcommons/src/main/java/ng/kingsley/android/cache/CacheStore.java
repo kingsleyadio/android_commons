@@ -14,8 +14,8 @@ import ng.kingsley.android.util.Log;
  * @author ADIO Kingsley O.
  * @since 14 Oct, 2016
  */
-public class FileStore {
-    private static final String TAG = FileStore.class.getSimpleName();
+public class CacheStore {
+    private static final String TAG = CacheStore.class.getSimpleName();
 
     private static final int VALUE_COUNT = 1;
     private static final int VALUE_INDEX = 0;
@@ -23,7 +23,7 @@ public class FileStore {
     private DiskLruCache cache;
     private Gson gson;
 
-    FileStore(CacheParams params, Gson gson) {
+    CacheStore(CacheParams params, Gson gson) {
         this.params = params;
         this.gson = gson;
 

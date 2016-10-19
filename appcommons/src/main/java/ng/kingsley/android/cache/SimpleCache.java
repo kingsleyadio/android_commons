@@ -27,8 +27,8 @@ public class SimpleCache {
 
     private final Context mContext;
     private final Gson mGson;
-    private FileStore mCache;
-    private FileStore mStore;
+    private CacheStore mCache;
+    private CacheStore mStore;
 
     @Inject
     SimpleCache(Application context, Gson gson) {
@@ -36,28 +36,28 @@ public class SimpleCache {
         mGson = gson;
     }
 
-    public FileStore cache() {
+    public CacheStore cache() {
         if (mCache == null) {
             synchronized (this) {
                 if (mCache == null) {
                     File dir = new File(mContext.getCacheDir(), CACHE_DIR);
                     long size = calculateDiskCacheSize(dir);
                     CacheParams params = new CacheParams(APP_VERSION, dir, size);
-                    mCache = new FileStore(params, mGson);
+                    mCache = new CacheStore(params, mGson);
                 }
             }
         }
         return mCache;
     }
 
-    public FileStore store() {
+    public CacheStore store() {
         if (mStore == null) {
             synchronized (this) {
                 if (mStore == null) {
                     File dir = new File(mContext.getFilesDir(), STORE_DIR);
                     long size = calculateDiskCacheSize(dir);
                     CacheParams params = new CacheParams(APP_VERSION, dir, size);
-                    mStore = new FileStore(params, mGson);
+                    mStore = new CacheStore(params, mGson);
                 }
             }
         }
