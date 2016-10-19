@@ -35,7 +35,7 @@ public class FileStore {
     }
 
     private String cacheKey(String plainKey) {
-        return DigestUtils.md5(plainKey);
+        return DigestUtils.md5(plainKey).toLowerCase();
     }
 
     public <T> boolean put(String key, T content, Converter<T> converter) {
