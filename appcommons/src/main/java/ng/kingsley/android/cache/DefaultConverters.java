@@ -35,12 +35,8 @@ class DefaultConverters {
         @Override
         public String readFromStream(InputStream stream) throws IOException {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] bytes = new byte[BLOCK_SIZE];
-            int l;
-            while ((l = stream.read(bytes)) != -1) {
-                baos.write(bytes, 0, l);
-            }
-            return new String(baos.toByteArray());
+            moveStream(stream, baos);
+            return new String(baos.toByteArray(), UTF_8);
         }
     }
 
