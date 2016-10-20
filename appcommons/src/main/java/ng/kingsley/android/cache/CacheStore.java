@@ -151,7 +151,7 @@ public class CacheStore {
     }
 
     @VisibleForTesting
-    DiskLruCache getCache() {
+    DiskLruCache internalCache() {
         return cache;
     }
 

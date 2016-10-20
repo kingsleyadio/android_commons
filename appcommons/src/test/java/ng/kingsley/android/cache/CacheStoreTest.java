@@ -156,7 +156,7 @@ public class CacheStoreTest {
     public static void destroy() {
         try {
             cacheStore.clear();
-            cacheStore.getCache().delete();
+            cacheStore.internalCache().delete();
             cacheDir.delete();
             System.out.println("Cleaned up test cache dir at: " + cacheDir.getAbsolutePath());
         } catch (IOException ignored) {
