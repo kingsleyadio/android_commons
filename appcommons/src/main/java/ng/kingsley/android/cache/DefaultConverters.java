@@ -3,6 +3,7 @@ package ng.kingsley.android.cache;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,6 +62,10 @@ class DefaultConverters {
         public void writeToStream(OutputStream stream, T content) {
             OutputStreamWriter osw = new OutputStreamWriter(stream, UTF_8);
             gson.toJson(content, type, osw);
+            try {
+                osw.flush();
+            } catch (IOException ignored) {
+            }
         }
 
         @Override
@@ -73,18 +78,14 @@ class DefaultConverters {
     static class InputStreamConverter implements Converter<InputStream> {
         @Override
         public void writeToStream(OutputStream stream, InputStream content) throws IOException {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] bytes = new byte[BLOCK_SIZE];
-            int l;
-            while ((l = content.read(bytes)) != -1) {
-                baos.write(bytes, 0, l);
-            }
-            baos.writeTo(stream);
+            moveStream(content, stream);
         }
 
         @Override
         public InputStream readFromStream(InputStream stream) throws IOException {
-            return stream;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            moveStream(stream, baos);
+            return new ByteArrayInputStream(baos.toByteArray());
         }
     }
 
@@ -104,6 +105,14 @@ class DefaultConverters {
                 baos.write(bytes, 0, l);
             }
             return baos.toByteArray();
+        }
+    }
+
+    static void moveStream(InputStream src, OutputStream dest) throws IOException {
+        byte[] bytes = new byte[BLOCK_SIZE];
+        int l;
+        while ((l = src.read(bytes)) != -1) {
+            dest.write(bytes, 0, l);
         }
     }
 

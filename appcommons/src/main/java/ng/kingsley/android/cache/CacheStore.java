@@ -1,11 +1,14 @@
 package ng.kingsley.android.cache;
 
+import android.support.annotation.VisibleForTesting;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.disklrucache.DiskLruCache;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import ng.kingsley.android.util.DigestUtils;
 import ng.kingsley.android.util.Log;
@@ -44,9 +47,15 @@ public class CacheStore {
         try {
             DiskLruCache.Editor editor = cache.edit(cacheKey);
             if (editor != null) {
-                converter.writeToStream(editor.newOutputStream(VALUE_INDEX), content);
-                editor.commit();
-                return true;
+                OutputStream os = editor.newOutputStream(VALUE_INDEX);
+                try {
+                    converter.writeToStream(os, content);
+                    editor.commit();
+                    return true;
+                } finally {
+                    //noinspection ThrowFromFinallyBlock
+                    os.close();
+                }
             }
         } catch (IOException e) {
             Log.e(TAG, "Failed to put data. key=" + key, e);
@@ -81,7 +90,12 @@ public class CacheStore {
         try {
             DiskLruCache.Snapshot snapshot = cache.get(cacheKey);
             if (snapshot != null) {
-                return converter.readFromStream(snapshot.getInputStream(VALUE_INDEX));
+                try {
+                    InputStream is = snapshot.getInputStream(VALUE_INDEX);
+                    return converter.readFromStream(is);
+                } finally {
+                    snapshot.close();
+                }
             }
         } catch (IOException e) {
             Log.e(TAG, "Failed to get data. key=" + key, e);
@@ -134,6 +148,11 @@ public class CacheStore {
     public void clear() throws IOException {
         cache.delete();
         cache = DiskLruCache.open(params.cacheDir, params.appVersion, VALUE_COUNT, params.maxSize);
+    }
+
+    @VisibleForTesting
+    DiskLruCache getCache() {
+        return cache;
     }
 
 }
