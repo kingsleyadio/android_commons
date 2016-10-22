@@ -92,7 +92,7 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
         private fun getHintView(parent: ViewGroup): View {
             val view: View = hintView ?: LayoutInflater.from(parent.context)
-              .inflate(android.R.layout.simple_spinner_item, parent, false)
+              .inflate(R.layout.list_simpleitem_no_offset, parent, false)
               .apply { hintView = this@apply }
 
             with(view.findViewById(android.R.id.text1) as TextView) {
