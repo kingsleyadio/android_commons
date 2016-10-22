@@ -1,6 +1,7 @@
 package ng.kingsley.android.widget
 
 import android.content.Context
+import android.content.DialogInterface
 import android.database.DataSetObserver
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.AppCompatSpinner
@@ -19,11 +20,21 @@ import ng.kingsley.android.appkommons.R
  * @since 22 Oct, 2016
  */
 class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-  AppCompatSpinner(context, attrs, defStyleAttr) {
+  AppCompatSpinner(context, attrs, defStyleAttr), DialogInterface.OnClickListener {
 
     private var mAdapter: InternalAdapter? = null
 
-    var hint: CharSequence
+    var hint: CharSequence = ""
+        set(value) {
+            if (field == value) return
+
+            field = value
+            val adapter = this@HintSpinner.adapter
+            if (adapter is BaseAdapter) {
+                // Is there a more efficient way?
+                adapter.notifyDataSetChanged()
+            }
+        }
 
     init {
         val ta = context.obtainStyledAttributes(attrs, R.styleable.HintSpinner, defStyleAttr, R.style.HintSpinner)
@@ -31,16 +42,17 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
         ta.recycle()
     }
 
-    override fun performClick(): Boolean {
-        if (mAdapter != null) {
-            AlertDialog.Builder(context)
-              .setTitle(hint)
-              .setAdapter(mAdapter) {
-                  d, w ->
-                  setSelection(w + 1)
-              }.show()
-        }
+    override fun onClick(dialog: DialogInterface, which: Int) {
+        setSelection(which + 1)
+    }
 
+    override fun performClick(): Boolean {
+        mAdapter?.let {
+            AlertDialog.Builder(context)
+              .setAdapter(it, this)
+              .setTitle(hint)
+              .show()
+        }
         // Eat click event
         return true
     }
@@ -107,14 +119,6 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
             return if (position == 0) null else mAdapter.getItem(position - EXTRA)
         }
 
-        override fun getItemViewType(position: Int): Int {
-            return 0
-        }
-
-        override fun getViewTypeCount(): Int {
-            return 1
-        }
-
         override fun getItemId(position: Int): Long {
             return if (position >= EXTRA) mAdapter.getItemId(position - EXTRA) else (position - EXTRA).toLong()
         }
@@ -133,14 +137,6 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
         override fun unregisterDataSetObserver(observer: DataSetObserver) {
             mAdapter.unregisterDataSetObserver(observer)
-        }
-
-        override fun areAllItemsEnabled(): Boolean {
-            return false
-        }
-
-        override fun isEnabled(position: Int): Boolean {
-            return position != 0
         }
 
     }
