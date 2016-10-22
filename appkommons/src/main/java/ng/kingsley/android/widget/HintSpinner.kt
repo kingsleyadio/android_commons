@@ -58,7 +58,7 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
         val internalAdapter = InternalAdapter(adapter)
         mAdapter = internalAdapter
-        super.setAdapter(HintSpinnerAdapter(internalAdapter, hint))
+        super.setAdapter(HintSpinnerAdapter(internalAdapter))
     }
 
     class InternalAdapter(val adapter: SpinnerAdapter) : ListAdapter, SpinnerAdapter by adapter {
@@ -73,20 +73,20 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
     }
 
-    class HintSpinnerAdapter(private val mAdapter: SpinnerAdapter, private val hint: CharSequence) : BaseAdapter() {
+    inner class HintSpinnerAdapter(private val mAdapter: SpinnerAdapter) : BaseAdapter() {
 
-        private var mHintView: View? = null
+        private val EXTRA = 1
+        private var hintView: View? = null
 
         private fun getHintView(parent: ViewGroup): View {
-            var view = mHintView
-            if (view == null) {
-                view = LayoutInflater.from(parent.context)
-                  .inflate(android.R.layout.simple_spinner_item, parent, false)
-                mHintView = view
-            }
+            val view: View = hintView ?: LayoutInflater.from(parent.context)
+              .inflate(android.R.layout.simple_spinner_item, parent, false)
+              .apply { hintView = this@apply }
 
-            (view!!.findViewById(android.R.id.text1) as TextView).text = hint
-            return view
+            with(view.findViewById(android.R.id.text1) as TextView) {
+                text = this@HintSpinner.hint
+                return this@with
+            }
         }
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -141,11 +141,6 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
         override fun isEnabled(position: Int): Boolean {
             return position != 0
-        }
-
-        companion object {
-
-            private const val EXTRA = 1
         }
 
     }
