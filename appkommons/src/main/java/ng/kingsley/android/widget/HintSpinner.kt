@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.database.DataSetObserver
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.support.annotation.DrawableRes
 import android.support.v4.view.ViewCompat
 import android.support.v7.content.res.AppCompatResources
@@ -309,7 +310,8 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
     }
 
     private inner class DropdownPopup(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : ListPopupWindow(context, attrs, defStyleAttr) {
-        internal var mAdapter: ListAdapter? = null
+        private val IS_AT_LEAST_JB = Build.VERSION.SDK_INT >= 16
+        private var mAdapter: ListAdapter? = null
         private val mVisibleRect = Rect()
 
         init {
@@ -401,9 +403,9 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
                 }
                 vto.addOnGlobalLayoutListener(layoutListener)
                 setOnDismissListener {
-                    @Suppress("NAME_SHADOWING")
-                    val vto = viewTreeObserver
-                    vto.removeOnGlobalLayoutListener(layoutListener)
+                    @Suppress("DEPRECATION")
+                    if (IS_AT_LEAST_JB) vto.removeOnGlobalLayoutListener(layoutListener)
+                    else vto.removeGlobalOnLayoutListener(layoutListener)
                 }
             }
         }
