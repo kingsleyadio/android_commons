@@ -3,14 +3,26 @@ package ng.kingsley.android.widget
 import android.content.Context
 import android.content.DialogInterface
 import android.database.DataSetObserver
-import android.support.v7.app.AlertDialog
+import android.graphics.Rect
+import android.graphics.drawable.Drawable
+import android.support.annotation.DrawableRes
+import android.support.v4.view.ViewCompat
+import android.support.v7.content.res.AppCompatResources
+import android.support.v7.view.menu.ShowableListMenu
 import android.support.v7.widget.AppCompatSpinner
+import android.support.v7.widget.ForwardingListener
+import android.support.v7.widget.ListPopupWindow
+import android.support.v7.widget.TintTypedArray
+import android.support.v7.widget.ViewUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.BaseAdapter
 import android.widget.ListAdapter
+import android.widget.ListView
 import android.widget.SpinnerAdapter
 import android.widget.TextView
 import ng.kingsley.android.appkommons.R
@@ -22,7 +34,21 @@ import ng.kingsley.android.appkommons.R
 class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
   AppCompatSpinner(context, attrs, defStyleAttr), DialogInterface.OnClickListener {
 
-    private var mAdapter: InternalAdapter? = null
+    private val mPopup: ListPopupWindow
+
+    /** Temporary holder for setAdapter() calls from the super constructor.  */
+    private var mTempAdapter: SpinnerAdapter? = null
+
+    private val mPopupSet: Boolean
+
+    /** Forwarding listener used to implement drag-to-open.  */
+    private var mForwardingListener: ForwardingListener? = null
+
+    private val MAX_ITEMS_MEASURED = 15
+
+    internal var mDropDownWidth: Int = 0
+
+    internal val mTempRect = Rect()
 
     var hint: CharSequence = ""
         set(value) {
@@ -30,50 +56,187 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
             field = value
             val adapter = this@HintSpinner.adapter
-            if (adapter is BaseAdapter) {
-                // Is there a more efficient way?
+            if (!mPopup.isShowing && adapter is BaseAdapter) {
                 adapter.notifyDataSetChanged()
             }
         }
 
     init {
-        val ta = context.obtainStyledAttributes(attrs, R.styleable.HintSpinner, defStyleAttr, R.style.HintSpinner)
-        hint = ta.getString(R.styleable.HintSpinner_android_hint) ?: ""
-        ta.recycle()
+        val popup = DropdownPopup(context, attrs, defStyleAttr)
+
+        val pa = TintTypedArray.obtainStyledAttributes(popupContext, attrs, R.styleable.Spinner, defStyleAttr, 0)
+
+        mDropDownWidth = pa.getLayoutDimension(
+          android.support.v7.appcompat.R.styleable.Spinner_android_dropDownWidth,
+          ViewGroup.LayoutParams.WRAP_CONTENT)
+        popup.setBackgroundDrawable(
+          pa.getDrawable(android.support.v7.appcompat.R.styleable.Spinner_android_popupBackground))
+        pa.recycle()
+
+        mPopup = popup
+        mForwardingListener = object : ForwardingListener(this) {
+            override fun getPopup(): ShowableListMenu {
+                return mPopup
+            }
+
+            public override fun onForwardingStarted(): Boolean {
+                if (!mPopup.isShowing) {
+                    mPopup.show()
+                }
+                return true
+            }
+        }
+
+        val a = TintTypedArray.obtainStyledAttributes(context, attrs, R.styleable.HintSpinner, defStyleAttr, 0)
+        hint = a.getString(R.styleable.HintSpinner_android_hint) ?: ""
+        a.recycle()
+
+        mPopupSet = true
+
+        // Base constructors can call setAdapter before we initialize mPopup.
+        // Finish setting things up if this happened.
+        if (mTempAdapter != null) {
+            adapter = mTempAdapter
+            mTempAdapter = null
+        }
     }
 
-    override fun onClick(dialog: DialogInterface, which: Int) {
-        setSelection(which + 1)
+    override fun setPopupBackgroundDrawable(background: Drawable?) {
+        mPopup.setBackgroundDrawable(background)
+    }
+
+    override fun setPopupBackgroundResource(@DrawableRes resId: Int) {
+        val drawable = AppCompatResources.getDrawable(popupContext, resId)
+        setPopupBackgroundDrawable(drawable)
+    }
+
+    override fun getPopupBackground(): Drawable? {
+        return mPopup.background
+    }
+
+    override fun setDropDownVerticalOffset(pixels: Int) {
+        mPopup.verticalOffset = pixels
+    }
+
+    override fun getDropDownVerticalOffset(): Int {
+        return mPopup.verticalOffset
+    }
+
+    override fun setDropDownHorizontalOffset(pixels: Int) {
+        mPopup.horizontalOffset = pixels
+    }
+
+    /**
+     * Get the configured horizontal offset in pixels for the spinner's popup window of choices.
+     * Only valid in [.MODE_DROPDOWN]; other modes will return 0.
+
+     * @return Horizontal offset in pixels
+     */
+    override fun getDropDownHorizontalOffset(): Int {
+        return mPopup.horizontalOffset
+    }
+
+    override fun setDropDownWidth(pixels: Int) {
+        mDropDownWidth = pixels
+    }
+
+    override fun getDropDownWidth(): Int {
+        return mDropDownWidth
+    }
+
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val forwardingListener = mForwardingListener
+        if (forwardingListener != null && forwardingListener.onTouch(this, event)) {
+            return true
+        }
+        return super.onTouchEvent(event)
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+        if (View.MeasureSpec.getMode(widthMeasureSpec) == View.MeasureSpec.AT_MOST) {
+            val measuredWidth = measuredWidth
+            setMeasuredDimension(Math.min(Math.max(measuredWidth,
+              compatMeasureContentWidth(adapter, background)),
+              View.MeasureSpec.getSize(widthMeasureSpec)),
+              measuredHeight)
+        }
     }
 
     override fun performClick(): Boolean {
-        mAdapter?.let {
-            AlertDialog.Builder(context)
-              .setAdapter(it, this)
-              .setTitle(hint)
-              .show()
+        if (!mPopup.isShowing) {
+            mPopup.show()
         }
-        // Eat click event
-        return true
-    }
 
-    override fun performLongClick(): Boolean {
-        // Eat long click event
+        // Eat event anyway
         return true
     }
 
     override fun setAdapter(adapter: SpinnerAdapter?) {
+        if (!mPopupSet) {
+            mTempAdapter = adapter
+            return
+        }
         if (adapter == null) {
-            mAdapter = null
-            return super.setAdapter(null)
+            mPopup.setAdapter(null)
+            super.setAdapter(null)
+            return
         }
 
-        val internalAdapter = InternalAdapter(adapter)
-        mAdapter = internalAdapter
-        super.setAdapter(HintSpinnerAdapter(internalAdapter))
+        super.setAdapter(HintSpinnerAdapter(adapter))
+        mPopup.setAdapter(DropdownAdapter(adapter))
     }
 
-    class InternalAdapter(val adapter: SpinnerAdapter) : ListAdapter, SpinnerAdapter by adapter {
+    internal fun compatMeasureContentWidth(adapter: SpinnerAdapter?, background: Drawable?): Int {
+        if (adapter == null) {
+            return 0
+        }
+
+        var width = 0
+        var itemView: View? = null
+        var itemType = 0
+        val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(measuredWidth, View.MeasureSpec.UNSPECIFIED)
+        val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(measuredHeight, View.MeasureSpec.UNSPECIFIED)
+
+        // Make sure the number of items we'll measure is capped. If it's a huge data set
+        // with wildly varying sizes, oh well.
+        var start = Math.max(0, selectedItemPosition)
+        val end = Math.min(adapter.count, start + MAX_ITEMS_MEASURED)
+        val count = end - start
+        start = Math.max(0, start - (MAX_ITEMS_MEASURED - count))
+        for (i in start..end - 1) {
+            val positionType = adapter.getItemViewType(i)
+            if (positionType != itemType) {
+                itemType = positionType
+                itemView = null
+            }
+            itemView = adapter.getView(i, itemView, this)
+            if (itemView!!.layoutParams == null) {
+                itemView.layoutParams = ViewGroup.LayoutParams(
+                  ViewGroup.LayoutParams.WRAP_CONTENT,
+                  ViewGroup.LayoutParams.WRAP_CONTENT)
+            }
+            itemView.measure(widthMeasureSpec, heightMeasureSpec)
+            width = Math.max(width, itemView.measuredWidth)
+        }
+
+        // Add background padding to measured width
+        if (background != null) {
+            background.getPadding(mTempRect)
+            width += mTempRect.left + mTempRect.right
+        }
+
+        return width
+    }
+
+    override fun onDetachedFromWindow() {
+        if (mPopup.isShowing) mPopup.dismiss()
+        super.onDetachedFromWindow()
+    }
+
+    class DropdownAdapter(val adapter: SpinnerAdapter) : ListAdapter, SpinnerAdapter by adapter {
 
         override fun areAllItemsEnabled(): Boolean {
             return if (adapter is ListAdapter) adapter.areAllItemsEnabled() else true
@@ -83,9 +246,13 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
             return if (adapter is ListAdapter) adapter.isEnabled(position) else true
         }
 
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+            return adapter.getDropDownView(position, convertView, parent)
+        }
+
     }
 
-    inner class HintSpinnerAdapter(private val mAdapter: SpinnerAdapter) : BaseAdapter() {
+    private inner class HintSpinnerAdapter(private val mAdapter: SpinnerAdapter) : BaseAdapter() {
 
         private val EXTRA = 1
         private var hintView: View? = null
@@ -139,5 +306,113 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
             mAdapter.unregisterDataSetObserver(observer)
         }
 
+    }
+
+    private inner class DropdownPopup(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : ListPopupWindow(context, attrs, defStyleAttr) {
+        internal var mAdapter: ListAdapter? = null
+        private val mVisibleRect = Rect()
+
+        init {
+            anchorView = this@HintSpinner
+            isModal = true
+            promptPosition = ListPopupWindow.POSITION_PROMPT_BELOW
+
+            setOnItemClickListener { parent, v, position, id ->
+                this@HintSpinner.setSelection(position + 1)
+                if (onItemClickListener != null) {
+                    this@HintSpinner.performItemClick(v, position, mAdapter!!.getItemId(position))
+                }
+                dismiss()
+            }
+        }
+
+        override fun setAdapter(adapter: ListAdapter?) {
+            super.setAdapter(adapter)
+            mAdapter = adapter
+        }
+
+        internal fun computeContentWidth() {
+            val background = background
+            var hOffset = 0
+            if (background != null) {
+                background.getPadding(mTempRect)
+                hOffset = if (ViewUtils.isLayoutRtl(this@HintSpinner)) mTempRect.right else -mTempRect.left
+            } else {
+                mTempRect.left = 0
+                mTempRect.right = 0
+            }
+
+            val spinnerPaddingLeft = this@HintSpinner.paddingLeft
+            val spinnerPaddingRight = this@HintSpinner.paddingRight
+            val spinnerWidth = this@HintSpinner.width
+            if (mDropDownWidth == ListPopupWindow.WRAP_CONTENT) {
+                var contentWidth = compatMeasureContentWidth(mAdapter as SpinnerAdapter, getBackground())
+                val contentWidthLimit = context.resources.displayMetrics.widthPixels - mTempRect.left - mTempRect.right
+                if (contentWidth > contentWidthLimit) {
+                    contentWidth = contentWidthLimit
+                }
+                setContentWidth(Math.max(contentWidth, spinnerWidth - spinnerPaddingLeft - spinnerPaddingRight))
+            } else if (mDropDownWidth == ListPopupWindow.MATCH_PARENT) {
+                setContentWidth(spinnerWidth - spinnerPaddingLeft - spinnerPaddingRight)
+            } else {
+                setContentWidth(mDropDownWidth)
+            }
+            if (ViewUtils.isLayoutRtl(this@HintSpinner)) {
+                hOffset += spinnerWidth - spinnerPaddingRight - width
+            } else {
+                hOffset += spinnerPaddingLeft
+            }
+            horizontalOffset = hOffset
+        }
+
+        override fun show() {
+            val wasShowing = isShowing
+
+            computeContentWidth()
+
+            inputMethodMode = ListPopupWindow.INPUT_METHOD_NOT_NEEDED
+            super.show()
+            val listView = listView
+            listView!!.choiceMode = ListView.CHOICE_MODE_SINGLE
+            val selection = Math.max(this@HintSpinner.selectedItemPosition - 1, 0)
+            setSelection(selection)
+
+            if (wasShowing) {
+                // Skip setting up the layout/dismiss listener below. If we were previously
+                // showing it will still stick around.
+                return
+            }
+
+            // Make sure we hide if our anchor goes away.
+            // TODO: This might be appropriate to push all the way down to PopupWindow,
+            // but it may have other side effects to investigate first. (Text editing handles, etc.)
+            val vto = viewTreeObserver
+            if (vto != null) {
+                val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+                    if (!isVisibleToUser(this@HintSpinner)) {
+                        dismiss()
+                    } else {
+                        computeContentWidth()
+
+                        // Use super.show here to update; we don't want to move the selected
+                        // position or adjust other things that would be reset otherwise.
+                        super@DropdownPopup.show()
+                    }
+                }
+                vto.addOnGlobalLayoutListener(layoutListener)
+                setOnDismissListener {
+                    @Suppress("NAME_SHADOWING")
+                    val vto = viewTreeObserver
+                    vto.removeOnGlobalLayoutListener(layoutListener)
+                }
+            }
+        }
+
+        /**
+         * Simplified version of the the hidden View.isVisibleToUser()
+         */
+        internal fun isVisibleToUser(view: View): Boolean {
+            return ViewCompat.isAttachedToWindow(view) && view.getGlobalVisibleRect(mVisibleRect)
+        }
     }
 }
