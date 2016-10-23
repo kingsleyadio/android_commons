@@ -19,4 +19,8 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="HintSpinner">
+        <attr name="android:hint" />
+    </declare-styleable>
+
 </resources>
