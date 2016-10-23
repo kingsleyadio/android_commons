@@ -35,7 +35,7 @@ class HeaderView @JvmOverloads constructor(context: Context, attrs: AttributeSet
         headerView = v.findViewById(R.id.header)
         titleView = headerView.findViewById(R.id.title) as TextView
 
-        val ta = context.obtainStyledAttributes(attrs, R.styleable.HeaderView, defStyleAttr, R.style.HeaderView)
+        val ta = context.obtainStyledAttributes(attrs, R.styleable.HeaderView, defStyleAttr, 0)
         headerTitle = ta.getString(R.styleable.HeaderView_headerTitle) ?: ""
 
         ta.recycle()

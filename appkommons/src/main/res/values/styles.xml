@@ -1,10 +1,5 @@
 <resources>
 
-    <!--Custom Widgets-->
-    <style name="HeaderView" />
-
-    <style name="DatetimeView" />
-
-    <style name="HintSpinner" />
+    <!--Custom Widgets With Defaults-->
 
 </resources>

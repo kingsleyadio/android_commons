@@ -54,12 +54,14 @@ class DatetimeView
         val tint = ResourcesCompat.getColor(resources, R.color.primary, null)
         dateView.setTintedCompoundDrawables(tint, right = R.drawable.ic_event_note_black_24dp)
 
-        val ta = context.obtainStyledAttributes(attrs, R.styleable.DatetimeView, defStyleAttr, R.style.DatetimeView)
-        val modeIndex = ta.getInt(R.styleable.DatetimeView_displayMode, 0) % DisplayMode.values().size
-        displayMode = DisplayMode.values()[modeIndex]
-        hint = ta.getString(R.styleable.DatetimeView_android_hint)
+        with(context.obtainStyledAttributes(attrs, R.styleable.DatetimeView, defStyleAttr, 0)) {
+            val modeIndex = getInt(R.styleable.DatetimeView_displayMode, 0) % DisplayMode.values().size
+            displayMode = DisplayMode.values()[modeIndex]
+            hint = getString(R.styleable.DatetimeView_hint)
 
-        ta.recycle()
+            recycle()
+        }
+
     }
 
     override fun onRestoreInstanceState(state: Parcelable) {

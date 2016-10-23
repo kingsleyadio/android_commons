@@ -2,25 +2,24 @@
 <resources>
 
     <declare-styleable name="HeaderView">
-        <attr name="headerTitle"
-            format="string" />
+        <attr name="headerTitle" format="string" />
     </declare-styleable>
 
     <declare-styleable name="DatetimeView">
-        <attr name="android:hint" />
-        <attr name="displayMode"
-            format="enum">
-            <enum name="dateOnly"
-                value="0" />
-            <enum name="timeOnly"
-                value="1" />
-            <enum name="dateTime"
-                value="2" />
+        <attr name="hint" />
+        <attr name="displayMode" format="enum">
+            <enum name="dateOnly" value="0" />
+            <enum name="timeOnly" value="1" />
+            <enum name="dateTime" value="2" />
         </attr>
     </declare-styleable>
 
     <declare-styleable name="HintSpinner">
-        <attr name="android:hint" />
+        <attr name="hint" />
+    </declare-styleable>
+
+    <declare-styleable name="Hint">
+        <attr name="hint" format="string" />
     </declare-styleable>
 
 </resources>

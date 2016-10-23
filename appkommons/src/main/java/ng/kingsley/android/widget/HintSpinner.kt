@@ -88,9 +88,10 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
             }
         }
 
-        val a = TintTypedArray.obtainStyledAttributes(context, attrs, R.styleable.HintSpinner, defStyleAttr, 0)
-        hint = a.getString(R.styleable.HintSpinner_android_hint) ?: ""
-        a.recycle()
+        with(TintTypedArray.obtainStyledAttributes(context, attrs, R.styleable.HintSpinner, defStyleAttr, 0)) {
+            hint = getString(R.styleable.HintSpinner_hint) ?: ""
+            recycle()
+        }
 
         mPopupSet = true
 
