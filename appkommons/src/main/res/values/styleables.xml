@@ -16,6 +16,7 @@
 
     <declare-styleable name="HintSpinner">
         <attr name="hint" />
+        <attr name="hint_layout" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="Hint">

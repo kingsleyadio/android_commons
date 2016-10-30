@@ -62,6 +62,8 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
             }
         }
 
+    private var hintLayoutRes: Int = R.layout.list_simpleitem_no_offset
+
     init {
         val popup = DropdownPopup(context, attrs, defStyleAttr)
 
@@ -90,6 +92,7 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
         with(TintTypedArray.obtainStyledAttributes(context, attrs, R.styleable.HintSpinner, defStyleAttr, 0)) {
             hint = getString(R.styleable.HintSpinner_hint) ?: ""
+            hintLayoutRes = getResourceId(R.styleable.HintSpinner_hint_layout, R.layout.list_simpleitem_no_offset)
             recycle()
         }
 
@@ -261,7 +264,7 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
         private fun getHintView(parent: ViewGroup): View {
             val view: View = hintView ?: LayoutInflater.from(parent.context)
-              .inflate(R.layout.list_simpleitem_no_offset, parent, false)
+              .inflate(this@HintSpinner.hintLayoutRes, parent, false)
               .apply { hintView = this@apply }
 
             with(view.findViewById(android.R.id.text1) as TextView) {
