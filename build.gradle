@@ -3,11 +3,16 @@
 buildscript {
 
     ext {
-        lib_version = '1.0.6-SNAPSHOT'
-        kotlin_version = '1.0.4'
-        support_version = '24.2.1'
+        lib_version = '1.0.6'
+        kotlin_version = '1.0.5'
+        support_version = '25.0.0'
         retrofit_version = '2.1.0'
         dagger_version = '2.7'
+
+        min_sdk = 15
+        compile_sdk = 25
+        target_sdk = compile_sdk
+        buildtools_version = '25.0.0'
 
         nexus = "https://raw.githubusercontent.com/kingsleyadio/maven_publishing/master/publishing.gradle"
         bintray = "https://raw.githubusercontent.com/kingsleyadio/maven_publishing/master/publishing_bintray.gradle"
