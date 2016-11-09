@@ -65,23 +65,23 @@ public class CacheStore {
     }
 
     public boolean putString(String key, String content) {
-        return put(key, content, new DefaultConverters.StringConverter());
+        return put(key, content, SimpleConverters.STRING);
     }
 
     public <T> boolean put(String key, T content, Class<T> clas) {
-        return put(key, content, new DefaultConverters.GsonConverter<>(clas, gson));
+        return put(key, content, GsonConverter.get(clas, gson));
     }
 
     public <T> boolean put(String key, T content, TypeToken<T> token) {
-        return put(key, content, new DefaultConverters.GsonConverter<>(token, gson));
+        return put(key, content, GsonConverter.get(token, gson));
     }
 
     public boolean putInputStream(String key, InputStream content) {
-        return put(key, content, new DefaultConverters.InputStreamConverter());
+        return put(key, content, SimpleConverters.INPUT_STREAM);
     }
 
     public boolean putByteArray(String key, byte[] content) {
-        return put(key, content, new DefaultConverters.ByteArrayConverter());
+        return put(key, content, SimpleConverters.BYTE_ARRAY);
     }
 
     public <T> T get(String key, Converter<T> converter) {
@@ -105,23 +105,23 @@ public class CacheStore {
     }
 
     public String getString(String key) {
-        return get(key, new DefaultConverters.StringConverter());
+        return get(key, SimpleConverters.STRING);
     }
 
     public <T> T get(String key, Class<T> clas) {
-        return get(key, new DefaultConverters.GsonConverter<>(clas, gson));
+        return get(key, GsonConverter.get(clas, gson));
     }
 
     public <T> T get(String key, TypeToken<T> token) {
-        return get(key, new DefaultConverters.GsonConverter<>(token, gson));
+        return get(key, GsonConverter.get(token, gson));
     }
 
     public InputStream getInputStream(String key) {
-        return get(key, new DefaultConverters.InputStreamConverter());
+        return get(key, SimpleConverters.INPUT_STREAM);
     }
 
     public byte[] getByteArray(String key) {
-        return get(key, new DefaultConverters.ByteArrayConverter());
+        return get(key, SimpleConverters.BYTE_ARRAY);
     }
 
     public boolean containsKey(String key) {

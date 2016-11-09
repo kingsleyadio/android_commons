@@ -126,12 +126,12 @@ public class CacheStoreTest {
         assertEquals(comments, resultComments);
 
         String key6 = "test_key_6";
-        InputStream stream = new ByteArrayInputStream("Kingsley".getBytes("UTF-8"));
+        InputStream stream = new ByteArrayInputStream("Kingsley".getBytes(Util.UTF_8));
         cacheStore.putInputStream(key6, stream);
         InputStream resultStream = cacheStore.getInputStream(key6);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DefaultConverters.moveStream(resultStream, baos);
-        assertEquals("Kingsley", baos.toString("UTF-8"));
+        Util.moveStream(resultStream, baos);
+        assertEquals("Kingsley", baos.toString(Util.UTF_8.name()));
 
         cacheStore.remove(key2);
         cacheStore.remove(key3);
