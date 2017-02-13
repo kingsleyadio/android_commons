@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion compile_sdk
@@ -25,13 +24,13 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$retrofit_version"
     compile "com.google.dagger:dagger:$dagger_version"
 
-    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.jakewharton:disklrucache:2.0.2'
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
 
-    testCompile 'junit:junit:4.12'
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
 
-    apt "com.google.dagger:dagger-compiler:$dagger_version"
+    testCompile 'junit:junit:4.12'
 }
 
 ext {
