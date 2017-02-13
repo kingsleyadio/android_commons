@@ -11,7 +11,10 @@ import android.view.View;
 /**
  * @author ADIO Kingsley O.
  * @since 02 Nov, 2015
+ *
+ * @deprecated Consider switching to the one provided by the Android support library.
  */
+@Deprecated
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
