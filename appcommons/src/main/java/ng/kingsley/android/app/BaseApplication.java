@@ -22,9 +22,9 @@ public abstract class BaseApplication<T extends ApplicationComponent> extends Ap
         mComponent = createComponent();
         mGson = createGson();
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-          .setDefaultFontPath(getString(R.string.font_default))
-          .setFontAttrId(R.attr.fontPath)
-          .build()
+                .setDefaultFontPath(getString(R.string.font_default))
+                .setFontAttrId(R.attr.fontPath)
+                .build()
         );
 
         AppManager.register(this);
@@ -32,17 +32,17 @@ public abstract class BaseApplication<T extends ApplicationComponent> extends Ap
 
     protected com.google.gson.Gson createGson() {
         return new com.google.gson.GsonBuilder()
-          .setDateFormat(Inputs.DATE_FORMAT_DEFAULT)
-          .create();
+                .setDateFormat(Inputs.DATE_FORMAT_DEFAULT)
+                .create();
     }
 
-    public com.google.gson.Gson getGson() {
+    public final com.google.gson.Gson getGson() {
         return mGson;
     }
 
     protected abstract T createComponent();
 
-    public T getComponent() {
+    public final T getComponent() {
         return this.mComponent;
     }
 }
