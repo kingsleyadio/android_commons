@@ -78,6 +78,7 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
         mPopup = popup
         mForwardingListener = object : ForwardingListener(this) {
+
             override fun getPopup(): ShowableListMenu {
                 return mPopup
             }
@@ -319,14 +320,15 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
         private val mVisibleRect = Rect()
 
         init {
-            anchorView = this@HintSpinner
+            val spinner = this@HintSpinner
+            anchorView = spinner
             isModal = true
             promptPosition = ListPopupWindow.POSITION_PROMPT_BELOW
 
-            setOnItemClickListener { parent, v, position, id ->
-                this@HintSpinner.setSelection(position + 1)
+            setOnItemClickListener { _, v, position, _ ->
+                spinner.setSelection(position + 1)
                 if (onItemClickListener != null) {
-                    this@HintSpinner.performItemClick(v, position, mAdapter!!.getItemId(position))
+                    spinner.performItemClick(v, position, mAdapter!!.getItemId(position))
                 }
                 dismiss()
             }
@@ -352,7 +354,7 @@ class HintSpinner @JvmOverloads constructor(context: Context, attrs: AttributeSe
             val spinnerPaddingRight = this@HintSpinner.paddingRight
             val spinnerWidth = this@HintSpinner.width
             if (mDropDownWidth == ListPopupWindow.WRAP_CONTENT) {
-                var contentWidth = compatMeasureContentWidth(mAdapter as SpinnerAdapter, getBackground())
+                var contentWidth = compatMeasureContentWidth(mAdapter as? SpinnerAdapter, getBackground())
                 val contentWidthLimit = context.resources.displayMetrics.widthPixels - mTempRect.left - mTempRect.right
                 if (contentWidth > contentWidthLimit) {
                     contentWidth = contentWidthLimit
