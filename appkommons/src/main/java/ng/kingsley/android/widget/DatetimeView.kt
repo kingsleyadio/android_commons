@@ -1,86 +1,170 @@
 package ng.kingsley.android.widget
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
+import android.content.res.ColorStateList
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.content.res.ResourcesCompat
+import android.support.v4.graphics.drawable.DrawableCompat
+import android.support.v7.widget.AppCompatEditText
+import android.text.InputType
 import android.text.format.DateFormat
 import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.widget.FrameLayout
-import android.widget.TextView
 import ng.kingsley.android.appkommons.R
-import ng.kingsley.android.extensions.setTintedCompoundDrawables
-import ng.kingsley.android.util.Inputs
+import ng.kingsley.android.extensions.color
+import ng.kingsley.android.extensions.drawable
+import java.util.Calendar
 import java.util.Date
 
 /**
  * @author ADIO Kingsley O.
  * @since 26 May, 2016
  */
-class DatetimeView
-@JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-  FrameLayout(context, attrs, defStyleAttr) {
-    private val dateView: TextView
+class DatetimeView @JvmOverloads constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = R.attr.editTextStyle
+) : AppCompatEditText(context, attrs, defStyleAttr) {
 
-    var date: Date? = Date()
-        get() {
-            if (Inputs.hasBlank(dateView.text)) return null
-            return field
-        }
+    var date: Date? = null
         set(value) {
-            if (value == null) dateView.text = null
-            else {
-                field = value
-                dateView.text = DateFormat.format(displayMode.format, value)
-            }
+            field = value
+            updateText()
         }
+
     var displayMode: DisplayMode = DisplayMode.DATE_ONLY
         set(value) {
             field = value
-            if (date != null) dateView.text = DateFormat.format(field.format, date)
+            updateText()
         }
-    var hint: CharSequence
-        get() = dateView.hint
-        set(value) {
-            dateView.hint = value
-        }
+
+    var minDate: Date? = null
+    var maxDate: Date? = null
 
     init {
-        val v = LayoutInflater.from(context).inflate(R.layout.view_datetime, this, true)
-        dateView = v.findViewById(R.id.datetime) as TextView
+        isFocusableInTouchMode = false
         isClickable = true
+        isLongClickable = false
+        isCursorVisible = false
+        inputType = InputType.TYPE_CLASS_TEXT
+        setSingleLine(true)
 
-        val tint = ResourcesCompat.getColor(resources, R.color.primary, null)
-        dateView.setTintedCompoundDrawables(tint, right = R.drawable.ic_event_note_black_24dp)
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.DatetimeView, defStyleAttr, 0)
 
-        with(context.obtainStyledAttributes(attrs, R.styleable.DatetimeView, defStyleAttr, 0)) {
-            val modeIndex = getInt(R.styleable.DatetimeView_displayMode, 0) % DisplayMode.values().size
+        try {
+            val modeIndex = typedArray.getInt(R.styleable.DatetimeView_displayMode, 0) % DisplayMode.values().size
             displayMode = DisplayMode.values()[modeIndex]
-            hint = getString(R.styleable.DatetimeView_hint)
 
-            recycle()
+            var drawableTint = supportBackgroundTintList
+                    ?: ColorStateList.valueOf(context.color(R.color.accent))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (compoundDrawableTintList != null) {
+                    drawableTint = compoundDrawableTintList
+                }
+            }
+            val rightDrawable = context.drawable(R.drawable.ic_event_note_black_24dp)!!
+            DrawableCompat.setTintList(rightDrawable, drawableTint)
+
+            compoundDrawablePadding = resources.getDimensionPixelSize(R.dimen.margin_widget)
+            setCompoundDrawablesWithIntrinsicBounds(null, null, rightDrawable, null)
+        } finally {
+            typedArray.recycle()
         }
 
+        setOnClickListener { pickDate() }
+    }
+
+    private fun updateText() {
+        if (date == null) text = null
+        else setText(DateFormat.format(displayMode.format, date))
+    }
+
+    override fun getDefaultEditable(): Boolean {
+        return false
+    }
+
+    private fun pickDate() = when (displayMode) {
+        DisplayMode.DATE_ONLY -> startDatePicker(false)
+        DisplayMode.DATE_TIME -> startDatePicker(true)
+        DisplayMode.TIME_ONLY -> startTimePicker()
+    }
+
+    private fun startDatePicker(proceedToTime: Boolean) {
+        val cal = Calendar.getInstance()
+        if (date != null) cal.time = date
+        else {
+            val minDate = minDate
+            val maxDate = maxDate
+            if (minDate != null) cal.time = minDate
+            else if (maxDate != null) cal.time = maxDate
+        }
+
+        val listener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
+            cal.apply {
+                set(Calendar.YEAR, year)
+                set(Calendar.MONTH, month)
+                set(Calendar.DAY_OF_MONTH, day)
+            }
+
+            if (proceedToTime) startTimePicker(cal.time)
+            else date = cal.apply {
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+
+            }.time
+        }
+
+        DatePickerDialog(context, listener, cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)
+        ).apply {
+            minDate?.let { datePicker.minDate = it.time }
+            maxDate?.let { datePicker.maxDate = it.time }
+
+        }.show()
+    }
+
+    private fun startTimePicker(initialDate: Date? = null) {
+        val cal = Calendar.getInstance()
+        if (initialDate != null) cal.time = initialDate
+        else if (date != null) cal.time = date
+
+        val listener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+            cal.apply {
+                set(Calendar.HOUR_OF_DAY, hourOfDay)
+                set(Calendar.MINUTE, minute)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+
+            date = cal.time
+        }
+
+        TimePickerDialog(context, listener,
+                cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false
+        ).show()
     }
 
     override fun onRestoreInstanceState(state: Parcelable) {
         val b = state as Bundle
-        super.onRestoreInstanceState(b.getParcelable("super"))
+        super.onRestoreInstanceState(b.getParcelable(KEY_SUPER))
 
-        displayMode = DisplayMode.valueOf(b.getString("displayMode", DisplayMode.DATE_ONLY.name))
-        if (b.containsKey("date")) {
-            date = Date(b.getLong("date", System.currentTimeMillis()))
+        displayMode = DisplayMode.valueOf(b.getString(KEY_DISPLAY_MODE, DisplayMode.DATE_ONLY.name))
+        if (b.containsKey(KEY_DATE)) {
+            date = Date(b.getLong(KEY_DATE, System.currentTimeMillis()))
         }
     }
 
     override fun onSaveInstanceState(): Parcelable {
         val b = Bundle()
-        b.putParcelable("super", super.onSaveInstanceState())
-        b.putString("displayMode", displayMode.name)
+        b.putParcelable(KEY_SUPER, super.onSaveInstanceState())
+        b.putString(KEY_DISPLAY_MODE, displayMode.name)
 
         val dateLocal = date
-        if (dateLocal != null) b.putLong("date", dateLocal.time)
+        if (dateLocal != null) b.putLong(KEY_DATE, dateLocal.time)
         return b
     }
 
@@ -90,4 +174,10 @@ class DatetimeView
         DATE_TIME("MMM d, yyyy - hh:mma")
     }
 
+    companion object {
+
+        const private val KEY_SUPER = "key_super"
+        const private val KEY_DISPLAY_MODE = "key_display_mode"
+        const private val KEY_DATE = "key_date"
+    }
 }
