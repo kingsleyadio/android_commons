@@ -6,7 +6,6 @@
     </declare-styleable>
 
     <declare-styleable name="DatetimeView">
-        <attr name="hint" />
         <attr name="displayMode" format="enum">
             <enum name="dateOnly" value="0" />
             <enum name="timeOnly" value="1" />

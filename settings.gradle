@@ -1,3 +1,4 @@
 include ':appcommons'
 include ':appkommons'
 include ':recyclerview-ext'
+include ':demo'

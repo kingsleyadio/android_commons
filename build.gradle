@@ -3,7 +3,7 @@
 buildscript {
 
     ext {
-        lib_version = '1.0.8'
+        lib_version = '1.0.9'
         kotlin_version = '1.1.2-2'
         support_version = '25.3.0'
         retrofit_version = '2.2.0'
