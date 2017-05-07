@@ -19,8 +19,8 @@ fun <T : ImageView> T.setTintedDrawable(@DrawableRes resId: Int, tint: Int) {
     else setImageDrawable(context.tintedDrawable(resId, tint))
 }
 
-@Suppress("NAME_SHADOWING")
 fun ImageView.loadUrl(url: String, @DrawableRes placeholder: Int = 0, @DrawableRes errorHolder: Int = 0) {
+    @Suppress("NAME_SHADOWING")
     val url = Uri.encode(url, "@#&=*+-_.,:!?()/~'%")
 
     val builder = Picasso.with(context).load(url).fit().centerCrop()
