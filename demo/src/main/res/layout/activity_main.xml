@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="ng.kingsley.android.appcommonsdemo.MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?colorPrimary"
+        android:elevation="@dimen/elevation_header"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_full">
+
+        <EditText
+            android:id="@+id/first_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_widget"
+            android:drawablePadding="@dimen/margin_widget"
+            android:drawableRight="@drawable/ic_event_note_black_24dp"
+            android:drawableTint="@color/accent"
+            android:hint="First text"
+            android:inputType="text" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <ng.kingsley.android.widget.DatetimeView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_widget"
+        android:layout_margin="@dimen/margin_full"
+        android:hint="Enter date" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_full">
+
+        <ng.kingsley.android.widget.DatetimeView
+            android:id="@+id/date_view"
+            android:layout_width="match_parent"
+            app:displayMode="dateTime"
+            android:layout_height="@dimen/height_widget"
+            android:hint="Enter date" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_full">
+
+        <EditText
+            android:id="@+id/edit_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_widget"
+            android:drawablePadding="@dimen/margin_widget"
+            android:drawableRight="@drawable/ic_event_note_black_24dp"
+            android:drawableTint="@color/accent"
+            android:hint="Some text"
+            android:inputType="text" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_full"
+        android:hint="@string/app_name">
+
+        <ng.kingsley.android.widget.HintSpinner
+            android:id="@+id/spinner_view"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_widget"
+            app:hint="@string/app_name"
+            app:hint_layout="@layout/list_simpleitem_no_offset" />
+
+    </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>
