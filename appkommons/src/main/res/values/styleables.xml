@@ -3,6 +3,9 @@
 
     <declare-styleable name="HeaderView">
         <attr name="headerTitle" format="string" />
+        <attr name="headerColor" format="color" />
+        <attr name="headerTextSize" format="dimension" />
+        <attr name="dividerThickness" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="DatetimeView">
