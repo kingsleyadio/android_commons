@@ -17,28 +17,38 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <android.support.design.widget.TextInputLayout
+    <ng.kingsley.android.widget.HeaderView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_full">
+        android:layout_margin="@dimen/margin_full"
+        app:contentPadding="@dimen/margin_full"
+        app:dividerThickness="1.5dp"
+        app:headerColor="?colorPrimary"
+        app:headerTitle="@string/app_name">
 
-        <EditText
-            android:id="@+id/first_view"
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/first_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_widget"
+                android:drawablePadding="@dimen/margin_widget"
+                android:drawableRight="@drawable/ic_event_note_black_24dp"
+                android:drawableTint="@color/accent"
+                android:hint="First text"
+                android:inputType="text" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <ng.kingsley.android.widget.DatetimeView
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_widget"
-            android:drawablePadding="@dimen/margin_widget"
-            android:drawableRight="@drawable/ic_event_note_black_24dp"
-            android:drawableTint="@color/accent"
-            android:hint="First text"
-            android:inputType="text" />
+            android:layout_marginTop="@dimen/margin_full"
+            android:hint="Enter date" />
 
-    </android.support.design.widget.TextInputLayout>
-
-    <ng.kingsley.android.widget.DatetimeView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_widget"
-        android:layout_margin="@dimen/margin_full"
-        android:hint="Enter date" />
+    </ng.kingsley.android.widget.HeaderView>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -48,9 +58,9 @@
         <ng.kingsley.android.widget.DatetimeView
             android:id="@+id/date_view"
             android:layout_width="match_parent"
-            app:displayMode="dateTime"
             android:layout_height="@dimen/height_widget"
-            android:hint="Enter date" />
+            android:hint="Enter date"
+            app:displayMode="dateTime" />
 
     </android.support.design.widget.TextInputLayout>
 
