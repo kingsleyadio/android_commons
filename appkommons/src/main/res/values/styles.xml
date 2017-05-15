@@ -1,5 +1,10 @@
 <resources>
 
     <!--Custom Widgets With Defaults-->
+    <style name="HeaderView">
+        <item name="headerColor">?colorPrimary</item>
+        <item name="headerTextSize">20sp</item>
+        <item name="dividerThickness">1dp</item>
+    </style>
 
 </resources>

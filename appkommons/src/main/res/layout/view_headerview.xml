@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/margin_full">
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/header"
@@ -16,16 +15,17 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?colorPrimary"
-            android:textSize="20sp"
-            tools:text="Hello world" />
+            tools:text="Hello world"
+            tools:textColor="?colorPrimary"
+            tools:textSize="20sp" />
 
         <View
+            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginBottom="@dimen/margin_full"
             android:layout_marginTop="@dimen/margin_widget"
-            android:background="?colorPrimary" />
+            tools:background="?colorPrimary" />
 
     </LinearLayout>
 

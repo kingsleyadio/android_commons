@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -57,7 +58,7 @@ public class BaseActivity extends AppCompatActivity {
             side.getLayoutParams().width = Math.min(possibleMinDrawerWidth, maxDrawerWidth);
 
             mToggle = new ActionBarDrawerToggle(this,
-              mDrawer, R.string.app_name, R.string.app_name);
+                    mDrawer, R.string.app_name, R.string.app_name);
             mToggle.setDrawerIndicatorEnabled(true);
             mDrawer.addDrawerListener(mToggle);
             mDrawer.post(new Runnable() {
@@ -93,10 +94,26 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public CharSequence getSupportTitle() {
+        if (getSupportActionBar() == null) return null;
+        return getSupportActionBar().getTitle();
+    }
+
+    public void setSupportTitle(CharSequence title) {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
+        }
+    }
+
+    public void setSupportTitle(@StringRes int titleRes) {
+        String title = (titleRes > 0) ? getString(titleRes) : null;
+        setSupportTitle(title);
+    }
+
     protected void presentFragment(Fragment fragment, boolean addToBackstack, boolean detachExisting) {
         FragmentTransaction transaction = getFragmentManager()
-          .beginTransaction()
-          .add(R.id.container, fragment);
+                .beginTransaction()
+                .add(R.id.container, fragment);
         if (detachExisting) {
             transaction.detach(getFragmentManager().findFragmentById(R.id.container));
         }
@@ -107,10 +124,10 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void presentFragment(android.support.v4.app.Fragment fragment,
-      boolean addToBackstack, boolean detachExisting) {
+            boolean addToBackstack, boolean detachExisting) {
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
-          .beginTransaction()
-          .add(R.id.container, fragment);
+                .beginTransaction()
+                .add(R.id.container, fragment);
         if (detachExisting) {
             transaction.detach(getSupportFragmentManager().findFragmentById(R.id.container));
         }
@@ -122,7 +139,7 @@ public class BaseActivity extends AppCompatActivity {
 
     protected boolean hasPermission(String permission) {
         return ContextCompat.checkSelfPermission(this, permission)
-          == PackageManager.PERMISSION_GRANTED;
+                == PackageManager.PERMISSION_GRANTED;
     }
 
     private static int attrToDimenPx(Context context, int attr) {
