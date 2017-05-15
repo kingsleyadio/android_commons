@@ -4,6 +4,8 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.support.annotation.ColorInt
 import android.support.annotation.DrawableRes
+import android.support.annotation.IdRes
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
@@ -14,20 +16,31 @@ import android.support.v4.app.Fragment as SupportFragment
  * @since 26 May, 2016
  */
 
-fun <T : ImageView> T.setTintedDrawable(@DrawableRes resId: Int, tint: Int) {
+inline fun <reified T : View> View.findView(@IdRes viewId: Int): T = findViewById(viewId) as T
+
+var View.isVisible: Boolean
+    get() = visibility == View.VISIBLE
+    set(value) {
+        visibility = if (value) View.VISIBLE else View.GONE
+    }
+
+fun ImageView.setTintedDrawable(@DrawableRes resId: Int, tint: Int) {
     if (resId <= 0) setImageDrawable(null)
     else setImageDrawable(context.tintedDrawable(resId, tint))
 }
 
-fun ImageView.loadUrl(url: String, @DrawableRes placeholder: Int = 0, @DrawableRes errorHolder: Int = 0) {
-    @Suppress("NAME_SHADOWING")
-    val url = Uri.encode(url, "@#&=*+-_.,:!?()/~'%")
+fun ImageView.loadImage(uri: Uri, placeHolder: Int = 0, errorHolder: Int = 0) {
+    Picasso.with(context).load(uri).apply {
+        if (placeHolder > 0) placeholder(context.drawable(placeHolder))
+        if (errorHolder > 0) error(errorHolder)
+    }
+            .fit()
+            .centerCrop()
+            .into(this)
+}
 
-    val builder = Picasso.with(context).load(url).fit().centerCrop()
-    if (placeholder > 0) builder.placeholder(context.drawable(placeholder))
-    if (errorHolder > 0) builder.error(errorHolder)
-
-    builder.into(this)
+fun ImageView.loadImage(url: String, placeHolder: Int = 0, errorHolder: Int = 0) {
+    loadImage(Uri.parse(url), placeHolder, errorHolder)
 }
 
 fun <T : TextView> T.setTintedCompoundDrawables(@ColorInt tint: Int,
