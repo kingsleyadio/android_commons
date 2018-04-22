@@ -23,8 +23,8 @@ inline fun <reified C> Fragment.getAppComponent(): C {
     return (activity.application as BaseApplication<*>).component as C
 }
 
-inline fun <reified C> SupportFragment.getAppComponent(): C {
-    return (activity.application as BaseApplication<*>).component as C
+inline fun <reified C> SupportFragment.getAppComponent(): C{
+    return (activity?.application as BaseApplication<*>).component as C
 }
 
 inline fun <reified T> Context.systemService(serviceName: String): T {

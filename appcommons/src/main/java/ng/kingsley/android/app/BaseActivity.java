@@ -42,14 +42,14 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void trySetupToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
         }
     }
 
     protected boolean trySetupDrawer() {
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer);
+        mDrawer = findViewById(R.id.drawer);
         if (mDrawer != null) {
             View side = mDrawer.findViewById(R.id.navigation_view);
             int possibleMinDrawerWidth = getScreenSize(this)[0] - attrToDimenPx(this, R.attr.actionBarSize);
