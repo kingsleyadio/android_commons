@@ -2,6 +2,7 @@ package ng.kingsley.android.appcommonsdemo
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import ng.kingsley.android.app.BaseActivity
 import java.util.Calendar
@@ -18,6 +19,7 @@ class MainActivity : BaseActivity() {
             set(Calendar.YEAR, get(Calendar.YEAR) - 16)
         }
         date_view.maxDate = cal.time
+        date_view.onDateChangeListener = { Toast.makeText(this, "Date changed: $it", Toast.LENGTH_SHORT).show() }
 
 
         spinner_view.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayOf("Mango", "Suya"))

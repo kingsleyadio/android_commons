@@ -28,6 +28,8 @@ class DatetimeView @JvmOverloads constructor(
         defStyleAttr: Int = R.attr.editTextStyle
 ) : AppCompatEditText(context, attrs, defStyleAttr) {
 
+    var onDateChangeListener: ((Date) -> Unit)? = null
+
     var date: Date? = null
         set(value) {
             field = value
@@ -115,7 +117,7 @@ class DatetimeView @JvmOverloads constructor(
                 set(Calendar.SECOND, 0)
                 set(Calendar.MILLISECOND, 0)
 
-            }.time
+            }.time.also { onDateChangeListener?.invoke(it) }
         }
 
         DatePickerDialog(context, listener, cal.get(Calendar.YEAR),
@@ -140,7 +142,7 @@ class DatetimeView @JvmOverloads constructor(
                 set(Calendar.MILLISECOND, 0)
             }
 
-            date = cal.time
+            date = cal.time.also { onDateChangeListener?.invoke(it) }
         }
 
         TimePickerDialog(context, listener,

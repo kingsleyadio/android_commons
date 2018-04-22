@@ -5,7 +5,6 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
-import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -92,22 +91,6 @@ public class BaseActivity extends AppCompatActivity {
         } else if (!getFragmentManager().popBackStackImmediate()) {
             super.onBackPressed();
         }
-    }
-
-    public CharSequence getSupportTitle() {
-        if (getSupportActionBar() == null) return null;
-        return getSupportActionBar().getTitle();
-    }
-
-    public void setSupportTitle(CharSequence title) {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(title);
-        }
-    }
-
-    public void setSupportTitle(@StringRes int titleRes) {
-        String title = (titleRes > 0) ? getString(titleRes) : null;
-        setSupportTitle(title);
     }
 
     protected void presentFragment(Fragment fragment, boolean addToBackstack, boolean detachExisting) {
