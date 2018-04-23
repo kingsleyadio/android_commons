@@ -3,12 +3,7 @@ package ng.kingsley.android.extensions
 import android.app.Fragment
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
 import ng.kingsley.android.app.BaseApplication
-import android.support.v4.app.Fragment as SupportFragment
 
 /**
  * @author ADIO Kingsley O.
@@ -24,7 +19,7 @@ inline fun <reified C> Fragment.getAppComponent(): C {
 }
 
 inline fun <reified C> SupportFragment.getAppComponent(): C{
-    return (activity?.application as BaseApplication<*>).component as C
+    return (requireActivity().application as BaseApplication<*>).component as C
 }
 
 inline fun <reified T> Context.systemService(serviceName: String): T {
