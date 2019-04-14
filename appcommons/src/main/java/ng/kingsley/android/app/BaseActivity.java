@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import ng.kingsley.android.appcommons.R;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * @author ADIO Kingsley O.
@@ -34,11 +33,6 @@ public class BaseActivity extends AppCompatActivity {
 
         trySetupToolbar();
         trySetupDrawer();
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     protected void trySetupToolbar() {

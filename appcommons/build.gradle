@@ -18,15 +18,12 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.android.support:appcompat-v7:$support_version"
-    implementation "com.android.support:exifinterface:$support_version"
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.google.dagger:dagger:$dagger_version"
+    api "com.android.support:appcompat-v7:$support_version"
+    api "com.android.support:exifinterface:$support_version"
+    api "com.google.dagger:dagger:$dagger_version"
 
-    implementation "com.google.code.gson:gson:$gson_version"
-    implementation 'com.jakewharton:disklrucache:2.0.2'
-    implementation 'uk.co.chrisjenx:calligraphy:2.1.0'
+    api "com.google.code.gson:gson:$gson_version"
+    api 'com.jakewharton:disklrucache:2.0.2'
 
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
 
