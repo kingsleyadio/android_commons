@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import ng.kingsley.android.appkommons.R
-import ng.kingsley.android.extensions.findView
 import ng.kingsley.android.extensions.isVisible
 import ng.kingsley.android.extensions.textColor
 
@@ -19,10 +18,11 @@ import ng.kingsley.android.extensions.textColor
  * @since 26 May, 2016
  */
 class HeaderView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : CardView(context, attrs, defStyleAttr) {
+
     private val container: ViewGroup
     private val headerView: View
     private val dividerView: View
@@ -59,10 +59,10 @@ class HeaderView @JvmOverloads constructor(
         isEditing = true
         val v = LayoutInflater.from(context).inflate(R.layout.view_headerview, this, true)
 
-        container = v.findView(R.id.content)
-        headerView = v.findView(R.id.header)
-        dividerView = v.findView(R.id.divider)
-        titleView = headerView.findView(R.id.title)
+        container = v.findViewById(R.id.content)
+        headerView = v.findViewById(R.id.header)
+        dividerView = v.findViewById(R.id.divider)
+        titleView = headerView.findViewById(R.id.title)
 
         val values = context.obtainStyledAttributes(attrs, R.styleable.HeaderView, defStyleAttr, R.style.HeaderView)
         try {

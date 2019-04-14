@@ -12,9 +12,9 @@ fun Map<String, String>.toStringBundle() = Bundle(size).also {
 }
 
 fun Bundle.toStringMap() = HashMap<String, String>(size()).also {
-    keySet().forEach { k -> it.put(k, getString(k)) }
+    keySet().forEach { k -> it[k] = getString(k) }
 }
 
 fun Bundle.toMap() = HashMap<String, Any>(size()).also {
-    keySet().forEach { k -> it.put(k, get(k)) }
+    keySet().forEach { k -> it[k] = get(k) }
 }

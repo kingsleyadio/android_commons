@@ -21,5 +21,5 @@ var AppCompatActivity.supportTitle: CharSequence?
     }
 
 fun AppCompatActivity.setSupportTitle(@StringRes titleRes: Int) {
-    supportTitle = if (titleRes > 0) getText(titleRes) else null
+    supportTitle = if (titleRes == 0) null else getText(titleRes)
 }
