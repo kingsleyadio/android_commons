@@ -36,6 +36,10 @@ import java.util.Set;
 import ng.kingsley.android.appcommons.R;
 import ng.kingsley.android.util.Lists;
 
+/**
+ * @deprecated Obsolete API. Consider using RecyclerView instead
+ */
+@Deprecated
 public class CollectionView extends ListView {
     private static final String TAG = "CollectionView";
 
@@ -72,6 +76,7 @@ public class CollectionView extends ListView {
               R.styleable.CollectionView_internalPadding, 0);
             mContentTopClearance = xmlArgs.getDimensionPixelSize(
               R.styleable.CollectionView_contentTopClearance, 0);
+            xmlArgs.recycle();
         }
     }
 
@@ -83,11 +88,11 @@ public class CollectionView extends ListView {
         if (animate) {
             Log.d(TAG, "CollectionView updating inventory with animation.");
             ViewCompat.setAlpha(this, 0);
-            updateInventoryImmediate(inv, animate);
+            updateInventoryImmediate(inv, true);
             doFadeInAnimation();
         } else {
             Log.d(TAG, "CollectionView updating inventory without animation.");
-            updateInventoryImmediate(inv, animate);
+            updateInventoryImmediate(inv, false);
         }
     }
 
@@ -135,7 +140,7 @@ public class CollectionView extends ListView {
 
     private boolean computeRowContent(int row, RowComputeResult result) {
         int curRow = 0;
-        int posInGroup = 0;
+        int posInGroup;
         for (InventoryGroup group : mInventory.mGroups) {
             if (group.mShowHeader) {
                 if (curRow == row) {
@@ -214,7 +219,7 @@ public class CollectionView extends ListView {
         }
     }
 
-    RowComputeResult mRowComputeResult = new RowComputeResult();
+    final RowComputeResult mRowComputeResult = new RowComputeResult();
 
     private int getRowViewType(int row) {
         if (computeRowContent(row, mRowComputeResult)) {
@@ -284,7 +289,7 @@ public class CollectionView extends ListView {
         int indexInGroup = rowInfo.groupOffset + column;
         if (indexInGroup >= rowInfo.group.mItemCount) {
             // out of bounds, so use an empty view
-            if (view != null && view instanceof EmptyView) {
+            if (view instanceof EmptyView) {
                 return view;
             }
             view = new EmptyView(getContext());
@@ -356,15 +361,13 @@ public class CollectionView extends ListView {
     }
 
     public static class Inventory {
-        private ArrayList<InventoryGroup> mGroups = new ArrayList<>();
+        private final ArrayList<InventoryGroup> mGroups = new ArrayList<>();
 
         public Inventory() {
         }
 
         public Inventory(Inventory copyFrom) {
-            for (InventoryGroup group : copyFrom.mGroups) {
-                mGroups.add(group);
-            }
+            mGroups.addAll(copyFrom.mGroups);
         }
 
         public void addGroup(InventoryGroup group) {
@@ -396,7 +399,7 @@ public class CollectionView extends ListView {
     }
 
     private static class MultiScrollListener implements OnScrollListener {
-        private final Set<OnScrollListener> children = new HashSet<OnScrollListener>();
+        private final Set<OnScrollListener> children = new HashSet<>();
 
 
         public void addOnScrollListener(OnScrollListener listener) {
@@ -420,13 +423,13 @@ public class CollectionView extends ListView {
     }
 
     public static class InventoryGroup implements Cloneable {
-        private int mGroupId = 0;
+        private int mGroupId;
         private boolean mShowHeader = false;
         private String mHeaderLabel = "";
         private int mDataIndexStart = 0;
         private int mDisplayCols = 1;
         private int mItemCount = 0;
-        private SparseArray<Object> mItemTag = new SparseArray<Object>();
+        private SparseArray<Object> mItemTag = new SparseArray<>();
         private SparseArray<Integer> mItemCustomDataIndices = new SparseArray<>();
 
         public InventoryGroup(int groupId) {

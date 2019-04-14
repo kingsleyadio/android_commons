@@ -16,13 +16,13 @@ public class Inputs {
     public static final String DATE_FORMAT_DEFAULT = "yyyy-MM-dd HH:mm:ss";
 
     public static String hexToString(String e) {
-        String char_txt = "";
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < e.length(); i = i + 2) {
             String c = e.substring(i, i + 2);
             char j = (char) Integer.parseInt(c, 16);
-            char_txt += j;
+            sb.append(j);
         }
-        return char_txt;
+        return sb.toString();
     }
 
     public static boolean isValidName(CharSequence target) {

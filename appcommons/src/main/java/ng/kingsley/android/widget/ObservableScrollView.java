@@ -24,7 +24,10 @@ import java.util.ArrayList;
 
 /**
  * A custom ScrollView that can accept a scroll listener.
+ *
+ * @deprecated Obsolete API. Consider using RecyclerView instead
  */
+@Deprecated
 public class ObservableScrollView extends ScrollView {
     private ArrayList<Callbacks> mCallbacks = new ArrayList<>();
 
