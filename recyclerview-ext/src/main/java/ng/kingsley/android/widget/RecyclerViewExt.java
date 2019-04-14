@@ -27,7 +27,7 @@ public class RecyclerViewExt extends RecyclerView {
     public boolean canScrollVertically(int direction) {
         if (direction < 1) { // Scrolling up
             boolean original = super.canScrollVertically(direction);
-            return !original && getChildAt(0) != null && getChildAt(0).getTop() < 0 || original;
+            return original || getChildAt(0) != null && getChildAt(0).getTop() < 0;
         }
         return super.canScrollVertically(direction);
 

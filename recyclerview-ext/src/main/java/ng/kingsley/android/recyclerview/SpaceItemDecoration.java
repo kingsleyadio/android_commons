@@ -1,6 +1,7 @@
 package ng.kingsley.android.recyclerview;
 
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,8 +21,8 @@ public class SpaceItemDecoration extends android.support.v7.widget.RecyclerView.
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, android.support.v7.widget.RecyclerView parent,
-      android.support.v7.widget.RecyclerView.State state) {
+    public void getItemOffsets(Rect outRect, @NonNull View view, android.support.v7.widget.RecyclerView parent,
+      @NonNull android.support.v7.widget.RecyclerView.State state) {
         int halfSpace = mSpace >> 1;
         outRect.left = halfSpace;
         outRect.right = halfSpace;
