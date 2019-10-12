@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * @author ADIO Kingsley O.
  * @since 02 Aug, 2015
  */
+@Deprecated
 public class RecyclerViewExt extends RecyclerView {
 
     public RecyclerViewExt(Context context) {
