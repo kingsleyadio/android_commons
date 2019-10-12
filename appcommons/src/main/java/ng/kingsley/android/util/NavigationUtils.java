@@ -3,9 +3,10 @@ package ng.kingsley.android.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+
+import androidx.annotation.NonNull;
 
 /**
  * @author ADIO Kingsley O.

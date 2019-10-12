@@ -10,14 +10,4 @@
             format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="CollectionView">
-        <attr name="internalPadding"
-            format="dimension" />
-        <attr name="contentTopClearance"
-            format="dimension" />
-    </declare-styleable>
-
-    <!--Other-->
-    <attr name="fontPath" />
-
 </resources>

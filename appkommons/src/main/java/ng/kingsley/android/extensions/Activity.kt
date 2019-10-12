@@ -2,8 +2,8 @@ package ng.kingsley.android.extensions
 
 import android.app.Activity
 import android.content.Intent
-import android.support.annotation.StringRes
-import android.support.v7.app.AppCompatActivity
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 
 /**
  * @author ADIO Kingsley O.

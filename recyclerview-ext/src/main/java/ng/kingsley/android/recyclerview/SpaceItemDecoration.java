@@ -1,18 +1,19 @@
 package ng.kingsley.android.recyclerview;
 
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 /**
  * @author ADIO Kingsley O.
  * @since 15 Oct, 2015
  */
-public class SpaceItemDecoration extends android.support.v7.widget.RecyclerView.ItemDecoration {
+public class SpaceItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mSpace;
 
@@ -21,8 +22,9 @@ public class SpaceItemDecoration extends android.support.v7.widget.RecyclerView.
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, @NonNull View view, android.support.v7.widget.RecyclerView parent,
-      @NonNull android.support.v7.widget.RecyclerView.State state) {
+    public void getItemOffsets(
+            Rect outRect, @NonNull View view, RecyclerView parent,
+            @NonNull RecyclerView.State state) {
         int halfSpace = mSpace >> 1;
         outRect.left = halfSpace;
         outRect.right = halfSpace;
@@ -44,14 +46,15 @@ public class SpaceItemDecoration extends android.support.v7.widget.RecyclerView.
         }
     }
 
-    private int getSpanCount(android.support.v7.widget.RecyclerView parent) {
+    private int getSpanCount(RecyclerView parent) {
         RecyclerView.LayoutManager manager = parent.getLayoutManager();
         if (manager instanceof GridLayoutManager) {
             return ((GridLayoutManager) manager).getSpanCount();
         } else if (manager instanceof StaggeredGridLayoutManager) {
             return ((StaggeredGridLayoutManager) manager).getSpanCount();
         } else if (manager instanceof LinearLayoutManager) {
-            if (((LinearLayoutManager) manager).getOrientation() == LinearLayoutManager.HORIZONTAL) {
+            if (((LinearLayoutManager) manager).getOrientation()
+                    == LinearLayoutManager.HORIZONTAL) {
                 return manager.getChildCount();
             }
         }

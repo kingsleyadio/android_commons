@@ -1,16 +1,17 @@
 package ng.kingsley.android.widget
 
 import android.content.Context
-import android.support.annotation.ColorInt
-import android.support.v7.widget.CardView
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.ColorInt
+import androidx.cardview.widget.CardView
+import androidx.core.content.withStyledAttributes
+import androidx.core.view.isVisible
 import ng.kingsley.android.appkommons.R
-import ng.kingsley.android.extensions.isVisible
 import ng.kingsley.android.extensions.textColor
 
 /**
@@ -48,9 +49,7 @@ class HeaderView @JvmOverloads constructor(
 
     var dividerThickness: Int
         get() = dividerView.height
-        set(value) = dividerView.layoutParams.run {
-            height = value
-        }
+        set(value) = dividerView.layoutParams.run { height = value }
 
     @Suppress("JoinDeclarationAndAssignment")
     private var isEditing: Boolean
@@ -64,14 +63,16 @@ class HeaderView @JvmOverloads constructor(
         dividerView = v.findViewById(R.id.divider)
         titleView = headerView.findViewById(R.id.title)
 
-        val values = context.obtainStyledAttributes(attrs, R.styleable.HeaderView, defStyleAttr, R.style.HeaderView)
-        try {
-            headerTitle = values.getString(R.styleable.HeaderView_headerTitle) ?: ""
-            headerColor = values.getColor(R.styleable.HeaderView_headerColor, 0)
-            headerTextSize = values.getDimension(R.styleable.HeaderView_headerTextSize, 0F)
-            dividerThickness = values.getDimensionPixelSize(R.styleable.HeaderView_dividerThickness, 0)
-        } finally {
-            values.recycle()
+        context.withStyledAttributes(
+            attrs,
+            R.styleable.HeaderView,
+            defStyleAttr,
+            R.style.HeaderView
+        ) {
+            headerTitle = getString(R.styleable.HeaderView_headerTitle) ?: ""
+            headerColor = getColor(R.styleable.HeaderView_headerColor, 0)
+            headerTextSize = getDimension(R.styleable.HeaderView_headerTextSize, 0F)
+            dividerThickness = getDimensionPixelSize(R.styleable.HeaderView_dividerThickness, 0)
         }
 
         isEditing = false
@@ -79,6 +80,7 @@ class HeaderView @JvmOverloads constructor(
 
     override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams?) {
         if (isEditing) return super.addView(child, index, params)
+
         container.addView(child, index, params)
     }
 }

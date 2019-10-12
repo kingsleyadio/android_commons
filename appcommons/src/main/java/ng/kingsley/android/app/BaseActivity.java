@@ -1,20 +1,20 @@
 package ng.kingsley.android.app;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import ng.kingsley.android.appcommons.R;
 
 /**
@@ -46,7 +46,8 @@ public class BaseActivity extends AppCompatActivity {
         mDrawer = findViewById(R.id.drawer);
         if (mDrawer != null) {
             View side = mDrawer.findViewById(R.id.navigation_view);
-            int possibleMinDrawerWidth = getScreenSize(this)[0] - attrToDimenPx(this, R.attr.actionBarSize);
+            int possibleMinDrawerWidth =
+                    getScreenSize(this)[0] - attrToDimenPx(this, R.attr.actionBarSize);
             int maxDrawerWidth = getResources().getDimensionPixelSize(R.dimen.navigation_drawer_max_width);
             side.getLayoutParams().width = Math.min(possibleMinDrawerWidth, maxDrawerWidth);
 
@@ -87,22 +88,11 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected void presentFragment(Fragment fragment, boolean addToBackstack, boolean detachExisting) {
-        FragmentTransaction transaction = getFragmentManager()
-                .beginTransaction()
-                .add(R.id.container, fragment);
-        if (detachExisting) {
-            transaction.detach(getFragmentManager().findFragmentById(R.id.container));
-        }
-        if (addToBackstack) {
-            transaction.addToBackStack(null);
-        }
-        transaction.commit();
-    }
-
-    protected void presentFragment(android.support.v4.app.Fragment fragment,
-            boolean addToBackstack, boolean detachExisting) {
-        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
+    protected void presentFragment(
+            Fragment fragment,
+            boolean addToBackstack,
+            boolean detachExisting) {
+        FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.container, fragment);
         if (detachExisting) {

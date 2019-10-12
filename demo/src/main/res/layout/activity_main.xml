@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="ng.kingsley.android.appcommonsdemo.MainActivity">
+    tools:context="ng.kingsley.android.appcommonsdemo.MainActivity"
+    >
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?colorPrimary"
         android:elevation="@dimen/elevation_header"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        >
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <ng.kingsley.android.widget.HeaderView
         android:layout_width="match_parent"
@@ -24,68 +27,77 @@
         app:contentPadding="@dimen/margin_full"
         app:dividerThickness="1.5dp"
         app:headerColor="?colorPrimary"
-        app:headerTitle="@string/app_name">
+        app:headerTitle="@string/app_name"
+        >
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:hint="First text"
+            >
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/first_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_widget"
                 android:drawablePadding="@dimen/margin_widget"
                 android:drawableRight="@drawable/ic_event_note_black_24dp"
                 android:drawableTint="@color/accent"
-                android:hint="First text"
-                android:inputType="text" />
+                android:inputType="text"
+                />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <ng.kingsley.android.widget.DatetimeView
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_widget"
             android:layout_marginTop="@dimen/margin_full"
-            android:hint="Enter date" />
+            android:hint="Enter date"
+            />
 
     </ng.kingsley.android.widget.HeaderView>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_full">
+        android:layout_margin="@dimen/margin_full"
+        >
 
         <ng.kingsley.android.widget.DatetimeView
             android:id="@+id/date_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_widget"
             android:hint="Enter date"
-            app:displayMode="dateTime" />
+            app:displayMode="dateTime"
+            />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_full">
+        android:layout_margin="@dimen/margin_full"
+        android:hint="Some text"
+        >
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_widget"
             android:drawablePadding="@dimen/margin_widget"
             android:drawableRight="@drawable/ic_event_note_black_24dp"
             android:drawableTint="@color/accent"
-            android:hint="Some text"
-            android:inputType="text" />
+            android:inputType="text"
+            />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_full"
-        android:hint="@string/app_name">
+        android:hint="@string/app_name"
+        >
 
         <ng.kingsley.android.widget.HintSpinner
             android:id="@+id/spinner_view"
@@ -93,8 +105,9 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_widget"
             app:hint="@string/app_name"
-            app:hint_layout="@layout/list_simpleitem_no_offset" />
+            app:hint_layout="@layout/list_simpleitem_no_offset"
+            />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>

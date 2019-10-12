@@ -1,6 +1,6 @@
 package ng.kingsley.android.cache;
 
-import android.support.v4.util.LruCache;
+import androidx.collection.LruCache;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -36,7 +36,7 @@ class GsonConverter<T> implements Converter<T> {
     }
 
     @Override
-    public T readFromStream(InputStream stream) throws IOException {
+    public T readFromStream(InputStream stream) {
         InputStreamReader isr = new InputStreamReader(stream, Util.UTF_8);
         return gson.fromJson(isr, type);
     }

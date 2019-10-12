@@ -2,13 +2,13 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion compile_sdk
+    compileSdkVersion rootProject.targetSdkVersion
 
     defaultConfig {
-        minSdkVersion min_sdk
-        targetSdkVersion target_sdk
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
-        versionName "$lib_version"
+        versionName "$libraryVersion"
     }
     buildTypes {
         release {
@@ -23,11 +23,12 @@ android {
 
 dependencies {
     api project(":appcommons")
-    api "com.android.support:appcompat-v7:$support_version"
-    api "com.google.code.gson:gson:$gson_version"
-    api "com.android.support:cardview-v7:$support_version"
-    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    api 'com.squareup.picasso:picasso:2.5.2'
+    api "androidx.appcompat:appcompat:$appCompatVersion"
+    api "androidx.cardview:cardview:$cardViewVersion"
+    api "androidx.core:core-ktx:$coreKtxVersion"
+    api "com.google.code.gson:gson:$gsonVersion"
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    api "com.squareup.picasso:picasso:$picassoVersion"
 
     testImplementation 'junit:junit:4.12'
 }

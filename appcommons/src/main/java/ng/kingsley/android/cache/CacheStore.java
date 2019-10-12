@@ -1,6 +1,6 @@
 package ng.kingsley.android.cache;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -53,7 +53,6 @@ public class CacheStore {
                     editor.commit();
                     return true;
                 } finally {
-                    //noinspection ThrowFromFinallyBlock
                     os.close();
                 }
             }

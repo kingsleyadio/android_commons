@@ -3,8 +3,9 @@ package ng.kingsley.android.util;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.support.media.ExifInterface;
 import android.util.Log;
+
+import androidx.exifinterface.media.ExifInterface;
 
 /**
  * @author ADIO Kingsley O.
@@ -33,7 +34,10 @@ public class BitmapUtils {
         return bitmap;
     }
 
-    public static BitmapFactory.Options getBitmapDecodeOptions(String imagePath, int outWidth, int outHeight) {
+    public static BitmapFactory.Options getBitmapDecodeOptions(
+            String imagePath,
+            int outWidth,
+            int outHeight) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(imagePath, options);
@@ -46,8 +50,9 @@ public class BitmapUtils {
     public static int getRotationAngle(String imagePath) {
         try {
             ExifInterface ei = new ExifInterface(imagePath);
-            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-              ExifInterface.ORIENTATION_NORMAL);
+            int orientation = ei.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL);
             switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
                     return 90;
@@ -66,10 +71,13 @@ public class BitmapUtils {
         mMatrix.reset();
         mMatrix.postRotate(rotationAngle);
         return Bitmap.createBitmap(bitmap, 0, 0,
-          bitmap.getWidth(), bitmap.getHeight(), mMatrix, false);
+                bitmap.getWidth(), bitmap.getHeight(), mMatrix, false);
     }
 
-    private static int calculateSampleSize(BitmapFactory.Options options, int dstWidth, int dstHeight) {
+    private static int calculateSampleSize(
+            BitmapFactory.Options options,
+            int dstWidth,
+            int dstHeight) {
         // Calculate inSampleSize
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -81,7 +89,7 @@ public class BitmapUtils {
             final int halfWidth = width / 2;
 
             while ((halfHeight / inSampleSize) > dstHeight
-              && (halfWidth / inSampleSize) > dstWidth) {
+                    && (halfWidth / inSampleSize) > dstWidth) {
                 inSampleSize <<= 1;
             }
         }

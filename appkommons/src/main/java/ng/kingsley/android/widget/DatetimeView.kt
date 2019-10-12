@@ -7,12 +7,13 @@ import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.AppCompatEditText
 import android.text.InputType
 import android.text.format.DateFormat
 import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.content.withStyledAttributes
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.ViewCompat
 import ng.kingsley.android.appkommons.R
 import ng.kingsley.android.extensions.color
 import ng.kingsley.android.extensions.drawable
@@ -24,9 +25,9 @@ import java.util.Date
  * @since 26 May, 2016
  */
 class DatetimeView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = R.attr.editTextStyle
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.editTextStyle
 ) : AppCompatEditText(context, attrs, defStyleAttr) {
 
     var onDateChangeListener: ((Date) -> Unit)? = null
@@ -54,14 +55,13 @@ class DatetimeView @JvmOverloads constructor(
         inputType = InputType.TYPE_CLASS_TEXT
         setSingleLine(true)
 
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.DatetimeView, defStyleAttr, 0)
-
-        try {
-            val modeIndex = typedArray.getInt(R.styleable.DatetimeView_displayMode, 0) % DisplayMode.values().size
+        context.withStyledAttributes(attrs, R.styleable.DatetimeView, defStyleAttr) {
+            val modeIndex =
+                getInt(R.styleable.DatetimeView_displayMode, 0) % DisplayMode.values().size
             displayMode = DisplayMode.values()[modeIndex]
 
-            var drawableTint = ViewCompat.getBackgroundTintList(this)
-                    ?: ColorStateList.valueOf(context.color(R.color.accent))
+            var drawableTint = ViewCompat.getBackgroundTintList(this@DatetimeView)
+                ?: ColorStateList.valueOf(context.color(R.color.accent))
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (compoundDrawableTintList != null) {
                     drawableTint = compoundDrawableTintList
@@ -72,8 +72,6 @@ class DatetimeView @JvmOverloads constructor(
 
             compoundDrawablePadding = resources.getDimensionPixelSize(R.dimen.margin_widget)
             setCompoundDrawablesWithIntrinsicBounds(null, null, rightDrawable, null)
-        } finally {
-            typedArray.recycle()
         }
 
         setOnClickListener { pickDate() }
@@ -121,8 +119,9 @@ class DatetimeView @JvmOverloads constructor(
             }.time.also { onDateChangeListener?.invoke(it) }
         }
 
-        DatePickerDialog(context, listener, cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)
+        DatePickerDialog(
+            context, listener, cal.get(Calendar.YEAR),
+            cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)
         ).apply {
             minDate?.let { datePicker.minDate = it.time }
             maxDate?.let { datePicker.maxDate = it.time }
@@ -146,8 +145,9 @@ class DatetimeView @JvmOverloads constructor(
             date = cal.time.also { onDateChangeListener?.invoke(it) }
         }
 
-        TimePickerDialog(context, listener,
-                cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false
+        TimePickerDialog(
+            context, listener,
+            cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false
         ).show()
     }
 
