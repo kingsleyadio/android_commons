@@ -23,8 +23,13 @@ inline fun <reified C> Fragment.getAppComponent(): C {
     return (requireActivity().application as BaseApplication<*>).component as C
 }
 
+@Deprecated("Legacy API", ReplaceWith("this.requireSystemService<T>()"))
 inline fun <reified T> Context.systemService(serviceName: String): T {
     return getSystemService(serviceName) as T
+}
+
+inline fun <reified T : Any> Context.requireSystemService(): T {
+    return ContextCompat.getSystemService(this, T::class.java)!!
 }
 
 fun Context.color(@ColorRes res: Int): Int = ContextCompat.getColor(this, res)
