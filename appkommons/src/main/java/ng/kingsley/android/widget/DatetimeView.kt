@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.graphics.drawable.DrawableCompat
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.AppCompatEditText
 import android.text.InputType
 import android.text.format.DateFormat
@@ -59,7 +60,7 @@ class DatetimeView @JvmOverloads constructor(
             val modeIndex = typedArray.getInt(R.styleable.DatetimeView_displayMode, 0) % DisplayMode.values().size
             displayMode = DisplayMode.values()[modeIndex]
 
-            var drawableTint = supportBackgroundTintList
+            var drawableTint = ViewCompat.getBackgroundTintList(this)
                     ?: ColorStateList.valueOf(context.color(R.color.accent))
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (compoundDrawableTintList != null) {
@@ -178,8 +179,8 @@ class DatetimeView @JvmOverloads constructor(
 
     companion object {
 
-        const private val KEY_SUPER = "key_super"
-        const private val KEY_DISPLAY_MODE = "key_display_mode"
-        const private val KEY_DATE = "key_date"
+        private const val KEY_SUPER = "key_super"
+        private const val KEY_DISPLAY_MODE = "key_display_mode"
+        private const val KEY_DATE = "key_date"
     }
 }

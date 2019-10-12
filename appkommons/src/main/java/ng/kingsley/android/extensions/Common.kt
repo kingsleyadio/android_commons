@@ -7,7 +7,6 @@ package ng.kingsley.android.extensions
  * @since 22 May, 2016
  */
 
-@Deprecated(message = "", replaceWith = ReplaceWith("org.jetbrains.anko.attempt(f)"))
 fun <R> attempt(f: () -> R): Pair<R?, Throwable?> {
     var result: R? = null
     var exception: Throwable? = null

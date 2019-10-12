@@ -16,8 +16,10 @@ import android.support.v4.app.Fragment as SupportFragment
  * @since 26 May, 2016
  */
 
-inline fun <reified T : View> View.findView(@IdRes viewId: Int): T = findViewById(viewId) as T
+@Deprecated("Obsolete API", ReplaceWith("findViewById<T>(viewId)"))
+inline fun <reified T : View> View.findView(@IdRes viewId: Int): T = findViewById(viewId)
 
+@Deprecated("Obsolete API", ReplaceWith("isVisible", "androidx.core.view.isVisible"))
 var View.isVisible: Boolean
     get() = visibility == View.VISIBLE
     set(value) {
@@ -25,7 +27,7 @@ var View.isVisible: Boolean
     }
 
 fun ImageView.setTintedDrawable(@DrawableRes resId: Int, tint: Int) {
-    if (resId <= 0) setImageDrawable(null)
+    if (resId == 0) setImageDrawable(null)
     else setImageDrawable(context.tintedDrawable(resId, tint))
 }
 
@@ -43,12 +45,16 @@ fun ImageView.loadImage(url: String, placeHolder: Int = 0, errorHolder: Int = 0)
     loadImage(Uri.parse(url), placeHolder, errorHolder)
 }
 
-fun <T : TextView> T.setTintedCompoundDrawables(@ColorInt tint: Int,
-  @DrawableRes left: Int = 0, @DrawableRes top: Int = 0, @DrawableRes right: Int = 0, @DrawableRes bottom: Int = 0) {
+fun <T : TextView> T.setTintedCompoundDrawables(
+    @ColorInt tint: Int,
+    @DrawableRes left: Int = 0,
+    @DrawableRes top: Int = 0,
+    @DrawableRes right: Int = 0,
+    @DrawableRes bottom: Int = 0
+) {
 
     fun tinted(@DrawableRes resId: Int): Drawable? {
-        if (resId <= 0) return null
-        else return context.tintedDrawable(resId, tint)
+        return if (resId == 0) null else context.tintedDrawable(resId, tint)
     }
 
     setCompoundDrawablesWithIntrinsicBounds(tinted(left), tinted(top), tinted(right), tinted(bottom))

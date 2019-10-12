@@ -2,10 +2,8 @@ package ng.kingsley.android.app;
 
 import android.app.Application;
 
-import ng.kingsley.android.appcommons.R;
 import ng.kingsley.android.dagger.components.ApplicationComponent;
 import ng.kingsley.android.util.Inputs;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * @author ADIO Kingsley O.
@@ -21,11 +19,6 @@ public abstract class BaseApplication<T extends ApplicationComponent> extends Ap
         super.onCreate();
         mComponent = createComponent();
         mGson = createGson();
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath(getString(R.string.font_default))
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
 
         AppManager.register(this);
     }

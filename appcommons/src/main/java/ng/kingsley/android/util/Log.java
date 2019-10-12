@@ -3,7 +3,9 @@ package ng.kingsley.android.util;
 /**
  * @author ADIO Kingsley O.
  * @since 28 Jul, 2015
+ * @deprecated Obsolete API. Consider using Timber instead
  */
+@Deprecated
 public final class Log {
 
     private static final String LOG_PREFIX = "";

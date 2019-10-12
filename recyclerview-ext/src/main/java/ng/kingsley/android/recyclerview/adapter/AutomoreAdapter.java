@@ -1,6 +1,7 @@
 package ng.kingsley.android.recyclerview.adapter;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -97,40 +98,36 @@ public class AutomoreAdapter extends WrapperAdapter {
         return moreEnabled.get();
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        switch (viewType) {
-            case TYPE_PROGRESS:
-                View v = LayoutInflater.from(parent.getContext())
-                  .inflate(mProgressResource, parent, false);
-                return new ProgressViewHolder(v);
-            default:
-                return super.onCreateViewHolder(parent, viewType);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == TYPE_PROGRESS) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(mProgressResource, parent, false);
+            return new ProgressViewHolder(v);
         }
+        return super.onCreateViewHolder(parent, viewType);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        switch (getItemViewType(position)) {
-            case TYPE_PROGRESS:
-                ProgressViewHolder pvh = (ProgressViewHolder) holder;
-                ViewGroup.LayoutParams lp = pvh.itemView.getLayoutParams();
-                if (lp instanceof StaggeredGridLayoutManager.LayoutParams) {
-                    ((StaggeredGridLayoutManager.LayoutParams) lp).setFullSpan(true);
-                }
-                // TODO: Set span full row for progress view in grid layout manager too
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (getItemViewType(position) == TYPE_PROGRESS) {
+            ProgressViewHolder pvh = (ProgressViewHolder) holder;
+            ViewGroup.LayoutParams lp = pvh.itemView.getLayoutParams();
+            if (lp instanceof StaggeredGridLayoutManager.LayoutParams) {
+                ((StaggeredGridLayoutManager.LayoutParams) lp).setFullSpan(true);
+            }
+            // TODO: Set span full row for progress view in grid layout manager too
 
-                pvh.progress.setIndeterminate(true);
-                break;
-            default:
-                super.onBindViewHolder(holder, position);
+            pvh.progress.setIndeterminate(true);
+        } else {
+            super.onBindViewHolder(holder, position);
 
-                if (!mLoading.get() && moreEnabled.get() && position + mTolerance.get() + 1 >= super.getItemCount()) {
-                    if (mMoreListener != null) {
-                        mLoading.set(true);
-                        mMoreListener.onMoreRequested(AutomoreAdapter.this);
-                    }
+            if (!mLoading.get() && moreEnabled.get() && position + mTolerance.get() + 1 >= super.getItemCount()) {
+                if (mMoreListener != null) {
+                    mLoading.set(true);
+                    mMoreListener.onMoreRequested(AutomoreAdapter.this);
                 }
+            }
         }
     }
 
@@ -143,6 +140,14 @@ public class AutomoreAdapter extends WrapperAdapter {
     }
 
     @Override
+    public long getItemId(int position) {
+        if (position >= super.getItemCount()) {
+            return -1;
+        }
+        return super.getItemId(position);
+    }
+
+    @Override
     public int getItemCount() {
         return super.getItemCount() + (moreEnabled.get() ? 1 : 0);
     }
@@ -151,9 +156,9 @@ public class AutomoreAdapter extends WrapperAdapter {
 
         private ProgressBar progress;
 
-        public ProgressViewHolder(View itemView) {
+        ProgressViewHolder(View itemView) {
             super(itemView);
-            progress = (ProgressBar) itemView.findViewById(R.id.progress);
+            progress = itemView.findViewById(R.id.progress);
         }
     }
 }
