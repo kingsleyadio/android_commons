@@ -22,6 +22,7 @@ class MainActivity : BaseActivity() {
         date_view.onDateChangeListener = { Toast.makeText(this, "Date changed: $it", Toast.LENGTH_SHORT).show() }
 
 
+        text_date_view.isEnabled = false
         spinner_view.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayOf("Mango", "Suya"))
     }
 }

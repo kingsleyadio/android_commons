@@ -48,12 +48,20 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <ng.kingsley.android.widget.DatetimeView
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_widget"
-            android:layout_marginTop="@dimen/margin_full"
-            android:hint="Enter date"
-            />
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_full"
+            >
+
+            <ng.kingsley.android.widget.DatetimeView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter date"
+                app:displayMode="dateOnly"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
     </ng.kingsley.android.widget.HeaderView>
 
@@ -64,10 +72,27 @@
         >
 
         <ng.kingsley.android.widget.DatetimeView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter date"
+            app:displayMode="dateTime"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_date_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_full"
+        android:hint="Enter another date"
+        app:boxBackgroundColor="@null"
+        >
+
+        <ng.kingsley.android.widget.DatetimeView
             android:id="@+id/date_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_widget"
-            android:hint="Enter date"
+            android:layout_height="wrap_content"
             app:displayMode="dateTime"
             />
 
@@ -83,7 +108,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_widget"
+            android:layout_height="wrap_content"
             android:drawablePadding="@dimen/margin_widget"
             android:drawableRight="@drawable/ic_event_note_black_24dp"
             android:drawableTint="@color/accent"
