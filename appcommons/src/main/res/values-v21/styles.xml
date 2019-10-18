@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Base.AppTheme"
-        parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowContentTransitions">true</item>
-    </style>
-
     <style name="AppTheme.FitsSystemWindows">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowTranslucentStatus">true</item>
