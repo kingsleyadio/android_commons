@@ -6,6 +6,7 @@ import android.app.Service;
  * @author ADIO Kingsley O.
  * @since 02 Oct, 2015
  */
+@Deprecated
 public abstract class BaseService extends Service {
 
     /**

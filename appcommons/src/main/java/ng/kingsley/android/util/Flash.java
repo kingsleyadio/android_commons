@@ -2,11 +2,12 @@ package ng.kingsley.android.util;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.support.annotation.StringRes;
 import android.widget.Toast;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import androidx.annotation.StringRes;
 
 /**
  * @author ADIO Kingsley O.

@@ -19,15 +19,16 @@ package ng.kingsley.android.util;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 import android.transition.Transition;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 
 /**
  * Helper class for creating content transitions used with {@link android.app.ActivityOptions}.
@@ -50,8 +51,9 @@ public class TransitionUtils {
      *                         participant.
      * @return All transition participants.
      */
-    public static Pair[] createSafePairs(@NonNull Activity activity,
-      boolean includeStatusBar, @Nullable Pair... otherParticipants) {
+    public static Pair[] createSafePairs(
+            @NonNull Activity activity,
+            boolean includeStatusBar, @Nullable Pair... otherParticipants) {
         // Avoid system UI glitches as described here:
         // https://plus.google.com/+AlexLockwood/posts/RPtwZ5nNebb
         View decor = activity.getWindow().getDecorView();
@@ -67,10 +69,10 @@ public class TransitionUtils {
         addNonNullViewToPairs(navBar, participants);
         // only add transition participants if there's at least one none-null element
         if (otherParticipants != null && !(otherParticipants.length == 1
-          && otherParticipants[0] == null)) {
+                                                   && otherParticipants[0] == null)) {
             participants.addAll(Arrays.asList(otherParticipants));
         }
-        return participants.toArray(new Pair[participants.size()]);
+        return participants.toArray(new Pair[0]);
     }
 
     private static void addNonNullViewToPairs(View view, List<Pair> participants) {

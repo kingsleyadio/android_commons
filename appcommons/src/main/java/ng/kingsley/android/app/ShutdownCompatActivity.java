@@ -2,7 +2,8 @@ package ng.kingsley.android.app;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
+
+import androidx.core.app.ActivityCompat;
 
 public class ShutdownCompatActivity extends Activity {
 

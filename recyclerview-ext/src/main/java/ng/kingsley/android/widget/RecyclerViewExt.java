@@ -1,14 +1,16 @@
 package ng.kingsley.android.widget;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * @author ADIO Kingsley O.
  * @since 02 Aug, 2015
  */
+@Deprecated
 public class RecyclerViewExt extends RecyclerView {
 
     public RecyclerViewExt(Context context) {

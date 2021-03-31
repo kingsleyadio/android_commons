@@ -6,6 +6,7 @@ import android.app.IntentService;
  * @author ADIO Kingsley O.
  * @since 22 Nov, 2015
  */
+@Deprecated
 public abstract class BaseIntentService extends IntentService {
 
     /**

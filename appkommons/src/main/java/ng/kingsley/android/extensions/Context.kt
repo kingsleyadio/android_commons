@@ -1,15 +1,14 @@
 package ng.kingsley.android.extensions
 
-import android.app.Fragment
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.annotation.ColorInt
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.fragment.app.Fragment
 import ng.kingsley.android.app.BaseApplication
-import android.support.v4.app.Fragment as SupportFragment
 
 /**
  * @author ADIO Kingsley O.
@@ -21,15 +20,16 @@ inline fun <reified C> Context.getAppComponent(): C {
 }
 
 inline fun <reified C> Fragment.getAppComponent(): C {
-    return (activity.application as BaseApplication<*>).component as C
-}
-
-inline fun <reified C> SupportFragment.getAppComponent(): C{
     return (requireActivity().application as BaseApplication<*>).component as C
 }
 
+@Deprecated("Legacy API", ReplaceWith("this.requireSystemService<T>()"))
 inline fun <reified T> Context.systemService(serviceName: String): T {
     return getSystemService(serviceName) as T
+}
+
+inline fun <reified T : Any> Context.requireSystemService(): T {
+    return ContextCompat.getSystemService(this, T::class.java)!!
 }
 
 fun Context.color(@ColorRes res: Int): Int = ContextCompat.getColor(this, res)

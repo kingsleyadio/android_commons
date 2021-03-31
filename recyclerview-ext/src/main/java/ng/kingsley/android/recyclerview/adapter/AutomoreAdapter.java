@@ -1,9 +1,5 @@
 package ng.kingsley.android.recyclerview.adapter;
 
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +8,10 @@ import android.widget.ProgressBar;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import ng.kingsley.android.recyclerview.R;
 
 /**
@@ -46,7 +46,10 @@ public class AutomoreAdapter extends WrapperAdapter {
         this(wrapped, R.layout.list_progress, progressEnabled);
     }
 
-    public AutomoreAdapter(RecyclerView.Adapter wrapped, @LayoutRes int progressResource, boolean progressEnabled) {
+    public AutomoreAdapter(
+            RecyclerView.Adapter wrapped,
+            @LayoutRes int progressResource,
+            boolean progressEnabled) {
         super(wrapped);
         mTolerance = new AtomicInteger(TOLERANCE_DEFAULT);
         mLoading = new AtomicBoolean(false);
@@ -102,7 +105,8 @@ public class AutomoreAdapter extends WrapperAdapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_PROGRESS) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(mProgressResource, parent, false);
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(mProgressResource, parent, false);
             return new ProgressViewHolder(v);
         }
         return super.onCreateViewHolder(parent, viewType);
@@ -122,7 +126,8 @@ public class AutomoreAdapter extends WrapperAdapter {
         } else {
             super.onBindViewHolder(holder, position);
 
-            if (!mLoading.get() && moreEnabled.get() && position + mTolerance.get() + 1 >= super.getItemCount()) {
+            if (!mLoading.get() && moreEnabled.get()
+                    && position + mTolerance.get() + 1 >= super.getItemCount()) {
                 if (mMoreListener != null) {
                     mLoading.set(true);
                     mMoreListener.onMoreRequested(AutomoreAdapter.this);

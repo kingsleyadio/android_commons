@@ -2,29 +2,16 @@ package ng.kingsley.android.extensions
 
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.support.annotation.ColorInt
-import android.support.annotation.DrawableRes
-import android.support.annotation.IdRes
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 import com.squareup.picasso.Picasso
-import android.support.v4.app.Fragment as SupportFragment
 
 /**
  * @author ADIO Kingsley O.
  * @since 26 May, 2016
  */
-
-@Deprecated("Obsolete API", ReplaceWith("findViewById<T>(viewId)"))
-inline fun <reified T : View> View.findView(@IdRes viewId: Int): T = findViewById(viewId)
-
-@Deprecated("Obsolete API", ReplaceWith("isVisible", "androidx.core.view.isVisible"))
-var View.isVisible: Boolean
-    get() = visibility == View.VISIBLE
-    set(value) {
-        visibility = if (value) View.VISIBLE else View.GONE
-    }
 
 fun ImageView.setTintedDrawable(@DrawableRes resId: Int, tint: Int) {
     if (resId == 0) setImageDrawable(null)
@@ -32,13 +19,13 @@ fun ImageView.setTintedDrawable(@DrawableRes resId: Int, tint: Int) {
 }
 
 fun ImageView.loadImage(uri: Uri, placeHolder: Int = 0, errorHolder: Int = 0) {
-    Picasso.with(context).load(uri).apply {
-        if (placeHolder > 0) placeholder(context.drawable(placeHolder))
+    Picasso.get().load(uri).apply {
+        if (placeHolder > 0) placeholder(context.drawable(placeHolder)!!)
         if (errorHolder > 0) error(errorHolder)
     }
-            .fit()
-            .centerCrop()
-            .into(this)
+        .fit()
+        .centerCrop()
+        .into(this)
 }
 
 fun ImageView.loadImage(url: String, placeHolder: Int = 0, errorHolder: Int = 0) {
@@ -57,7 +44,12 @@ fun <T : TextView> T.setTintedCompoundDrawables(
         return if (resId == 0) null else context.tintedDrawable(resId, tint)
     }
 
-    setCompoundDrawablesWithIntrinsicBounds(tinted(left), tinted(top), tinted(right), tinted(bottom))
+    setCompoundDrawablesWithIntrinsicBounds(
+        tinted(left),
+        tinted(top),
+        tinted(right),
+        tinted(bottom)
+    )
 }
 
 var TextView.textColor: Int

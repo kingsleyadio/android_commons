@@ -29,12 +29,12 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.view.ViewCompat;
 import ng.kingsley.android.appcommons.R;
 
 
@@ -74,7 +74,7 @@ public class BezelImageView extends AppCompatImageView {
 
         // Attribute initialization
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BezelImageView,
-          defStyle, 0);
+                defStyle, 0);
 
         mMaskDrawable = a.getDrawable(R.styleable.BezelImageView_maskDrawable);
         if (mMaskDrawable != null) {
@@ -86,8 +86,9 @@ public class BezelImageView extends AppCompatImageView {
             mBorderDrawable.setCallback(this);
         }
 
-        mDesaturateOnPress = a.getBoolean(R.styleable.BezelImageView_desaturateOnPress,
-          mDesaturateOnPress);
+        mDesaturateOnPress = a.getBoolean(
+                R.styleable.BezelImageView_desaturateOnPress,
+                mDesaturateOnPress);
 
         a.recycle();
 
@@ -160,7 +161,8 @@ public class BezelImageView extends AppCompatImageView {
             if (mMaskDrawable != null) {
                 int sc = cacheCanvas.save();
                 mMaskDrawable.draw(cacheCanvas);
-                mMaskedPaint.setColorFilter((mDesaturateOnPress && isPressed()) ? mDesaturateColorFilter : null);
+                mMaskedPaint.setColorFilter(
+                        (mDesaturateOnPress && isPressed()) ? mDesaturateColorFilter : null);
                 cacheCanvas.saveLayer(mBoundsF, mMaskedPaint, Canvas.ALL_SAVE_FLAG);
                 super.onDraw(cacheCanvas);
                 cacheCanvas.restoreToCount(sc);

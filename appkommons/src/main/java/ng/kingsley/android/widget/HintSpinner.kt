@@ -6,15 +6,6 @@ import android.content.DialogInterface
 import android.database.DataSetObserver
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.os.Build
-import android.support.annotation.DrawableRes
-import android.support.v4.view.ViewCompat
-import android.support.v7.content.res.AppCompatResources
-import android.support.v7.view.menu.ShowableListMenu
-import android.support.v7.widget.AppCompatSpinner
-import android.support.v7.widget.ForwardingListener
-import android.support.v7.widget.ListPopupWindow
-import android.support.v7.widget.ViewUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -26,13 +17,25 @@ import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.SpinnerAdapter
 import android.widget.TextView
+import androidx.annotation.DrawableRes
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.view.menu.ShowableListMenu
+import androidx.appcompat.widget.AppCompatSpinner
+import androidx.appcompat.widget.ForwardingListener
+import androidx.appcompat.widget.ListPopupWindow
+import androidx.appcompat.widget.ViewUtils
+import androidx.core.content.withStyledAttributes
+import androidx.core.view.ViewCompat
 import ng.kingsley.android.appkommons.R
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * @author ADIO Kingsley O.
  * @since 22 Oct, 2016
  */
 @SuppressLint("RestrictedApi")
+@Deprecated("Consider migrating to a non-spinner based solution")
 class HintSpinner @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -72,15 +75,15 @@ class HintSpinner @JvmOverloads constructor(
     init {
         val popup = DropdownPopup(context, attrs, defStyleAttr)
 
-        val pa = popupContext.obtainStyledAttributes(attrs, R.styleable.Spinner, defStyleAttr, 0)
-
-        mDropDownWidth = pa.getLayoutDimension(
-          android.support.v7.appcompat.R.styleable.Spinner_android_dropDownWidth,
-            LayoutParams.WRAP_CONTENT
-        )
-        popup.setBackgroundDrawable(
-          pa.getDrawable(android.support.v7.appcompat.R.styleable.Spinner_android_popupBackground))
-        pa.recycle()
+        popupContext.withStyledAttributes(attrs, R.styleable.Spinner, defStyleAttr) {
+            mDropDownWidth = getLayoutDimension(
+                androidx.appcompat.R.styleable.Spinner_android_dropDownWidth,
+                LayoutParams.WRAP_CONTENT
+            )
+            popup.setBackgroundDrawable(
+                getDrawable(androidx.appcompat.R.styleable.Spinner_android_popupBackground)
+            )
+        }
 
         mPopup = popup
         mForwardingListener = object : ForwardingListener(this) {
@@ -97,10 +100,12 @@ class HintSpinner @JvmOverloads constructor(
             }
         }
 
-        with(context.obtainStyledAttributes(attrs, R.styleable.HintSpinner, defStyleAttr, 0)) {
+        context.withStyledAttributes(attrs, R.styleable.HintSpinner, defStyleAttr) {
             hint = getString(R.styleable.HintSpinner_hint) ?: ""
-            hintLayoutRes = getResourceId(R.styleable.HintSpinner_hint_layout, R.layout.list_simpleitem_no_offset)
-            recycle()
+            hintLayoutRes = getResourceId(
+                R.styleable.HintSpinner_hint_layout,
+                R.layout.list_simpleitem_no_offset
+            )
         }
 
         mPopupSet = true
@@ -170,11 +175,13 @@ class HintSpinner @JvmOverloads constructor(
 
         if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.AT_MOST) {
             val measuredWidth = measuredWidth
-            setMeasuredDimension(Math.min(Math.max(measuredWidth,
-              compatMeasureContentWidth(adapter, background)),
-                MeasureSpec.getSize(widthMeasureSpec)
-            ),
-              measuredHeight)
+            setMeasuredDimension(
+                measuredWidth.coerceIn(
+                    compatMeasureContentWidth(adapter, background),
+                    MeasureSpec.getSize(widthMeasureSpec)
+                ),
+                measuredHeight
+            )
         }
     }
 
@@ -210,15 +217,15 @@ class HintSpinner @JvmOverloads constructor(
         var width = 0
         var itemView: View? = null
         var itemType = 0
-        val widthMeasureSpec = MeasureSpec.makeMeasureSpec(measuredWidth, View.MeasureSpec.UNSPECIFIED)
-        val heightMeasureSpec = MeasureSpec.makeMeasureSpec(measuredHeight, View.MeasureSpec.UNSPECIFIED)
+        val widthMeasureSpec = MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.UNSPECIFIED)
+        val heightMeasureSpec = MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.UNSPECIFIED)
 
         // Make sure the number of items we'll measure is capped. If it's a huge data set
         // with wildly varying sizes, oh well.
-        var start = Math.max(0, selectedItemPosition)
-        val end = Math.min(adapter.count, start + MAX_ITEMS_MEASURED)
+        var start = max(0, selectedItemPosition)
+        val end = min(adapter.count, start + MAX_ITEMS_MEASURED)
         val count = end - start
-        start = Math.max(0, start - (MAX_ITEMS_MEASURED - count))
+        start = max(0, start - (MAX_ITEMS_MEASURED - count))
         for (i in start until end) {
             val positionType = adapter.getItemViewType(i)
             if (positionType != itemType) {
@@ -233,7 +240,7 @@ class HintSpinner @JvmOverloads constructor(
                 )
             }
             itemView.measure(widthMeasureSpec, heightMeasureSpec)
-            width = Math.max(width, itemView.measuredWidth)
+            width = width.coerceAtLeast(itemView.measuredWidth)
         }
 
         // Add background padding to measured width
@@ -250,7 +257,10 @@ class HintSpinner @JvmOverloads constructor(
         super.onDetachedFromWindow()
     }
 
-    class DropdownAdapter(private val adapter: SpinnerAdapter) : ListAdapter, SpinnerAdapter by adapter {
+    class DropdownAdapter(
+        private val adapter: SpinnerAdapter
+    ) : ListAdapter,
+        SpinnerAdapter by adapter {
 
         override fun areAllItemsEnabled(): Boolean {
             return if (adapter is ListAdapter) adapter.areAllItemsEnabled() else true
@@ -273,8 +283,8 @@ class HintSpinner @JvmOverloads constructor(
 
         private fun getHintView(parent: ViewGroup): View {
             val view: View = hintView ?: LayoutInflater.from(parent.context)
-              .inflate(this@HintSpinner.hintLayoutRes, parent, false)
-              .apply { hintView = this@apply }
+                .inflate(this@HintSpinner.hintLayoutRes, parent, false)
+                .apply { hintView = this@apply }
 
             with(view.findViewById(android.R.id.text1) as TextView) {
                 text = this@HintSpinner.hint
@@ -322,8 +332,11 @@ class HintSpinner @JvmOverloads constructor(
 
     }
 
-    private inner class DropdownPopup(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : ListPopupWindow(context, attrs, defStyleAttr) {
-        private val IS_AT_LEAST_JB = Build.VERSION.SDK_INT >= 16
+    private inner class DropdownPopup(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int
+    ) : ListPopupWindow(context, attrs, defStyleAttr) {
         private var mAdapter: ListAdapter? = null
         private val mVisibleRect = Rect()
 
@@ -352,7 +365,8 @@ class HintSpinner @JvmOverloads constructor(
             var hOffset = 0
             if (background != null) {
                 background.getPadding(mTempRect)
-                hOffset = if (ViewUtils.isLayoutRtl(this@HintSpinner)) mTempRect.right else -mTempRect.left
+                hOffset =
+                    if (ViewUtils.isLayoutRtl(this@HintSpinner)) mTempRect.right else -mTempRect.left
             } else {
                 mTempRect.left = 0
                 mTempRect.right = 0
@@ -362,21 +376,25 @@ class HintSpinner @JvmOverloads constructor(
             val spinnerPaddingRight = this@HintSpinner.paddingRight
             val spinnerWidth = this@HintSpinner.width
             if (mDropDownWidth == WRAP_CONTENT) {
-                var contentWidth = compatMeasureContentWidth(mAdapter as? SpinnerAdapter, getBackground())
-                val contentWidthLimit = context.resources.displayMetrics.widthPixels - mTempRect.left - mTempRect.right
+                var contentWidth =
+                    compatMeasureContentWidth(mAdapter as? SpinnerAdapter, getBackground())
+                val contentWidthLimit =
+                    context.resources.displayMetrics.widthPixels - mTempRect.left - mTempRect.right
                 if (contentWidth > contentWidthLimit) {
                     contentWidth = contentWidthLimit
                 }
-                setContentWidth(Math.max(contentWidth, spinnerWidth - spinnerPaddingLeft - spinnerPaddingRight))
+                setContentWidth(
+                    contentWidth.coerceAtLeast(spinnerWidth - spinnerPaddingLeft - spinnerPaddingRight)
+                )
             } else if (mDropDownWidth == MATCH_PARENT) {
                 setContentWidth(spinnerWidth - spinnerPaddingLeft - spinnerPaddingRight)
             } else {
                 setContentWidth(mDropDownWidth)
             }
-            if (ViewUtils.isLayoutRtl(this@HintSpinner)) {
-                hOffset += spinnerWidth - spinnerPaddingRight - width
+            hOffset += if (ViewUtils.isLayoutRtl(this@HintSpinner)) {
+                spinnerWidth - spinnerPaddingRight - width
             } else {
-                hOffset += spinnerPaddingLeft
+                spinnerPaddingLeft
             }
             horizontalOffset = hOffset
         }
@@ -388,9 +406,9 @@ class HintSpinner @JvmOverloads constructor(
 
             inputMethodMode = INPUT_METHOD_NOT_NEEDED
             super.show()
-            val listView = listView
-            listView!!.choiceMode = ListView.CHOICE_MODE_SINGLE
-            val selection = Math.max(this@HintSpinner.selectedItemPosition - 1, 0)
+            val listView = listView ?: return
+            listView.choiceMode = ListView.CHOICE_MODE_SINGLE
+            val selection = max(this@HintSpinner.selectedItemPosition - 1, 0)
             setSelection(selection)
 
             if (wasShowing) {
@@ -402,25 +420,21 @@ class HintSpinner @JvmOverloads constructor(
             // Make sure we hide if our anchor goes away.
             // TODO: This might be appropriate to push all the way down to PopupWindow,
             // but it may have other side effects to investigate first. (Text editing handles, etc.)
-            val vto = viewTreeObserver
-            if (vto != null) {
-                val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-                    if (!isVisibleToUser(this@HintSpinner)) {
-                        dismiss()
-                    } else {
-                        computeContentWidth()
+            val vto = viewTreeObserver ?: return
+            val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+                if (!isVisibleToUser(this@HintSpinner)) {
+                    dismiss()
+                } else {
+                    computeContentWidth()
 
-                        // Use super.show here to update; we don't want to move the selected
-                        // position or adjust other things that would be reset otherwise.
-                        super@DropdownPopup.show()
-                    }
+                    // Use super.show here to update; we don't want to move the selected
+                    // position or adjust other things that would be reset otherwise.
+                    super@DropdownPopup.show()
                 }
-                vto.addOnGlobalLayoutListener(layoutListener)
-                setOnDismissListener {
-                    @Suppress("DEPRECATION")
-                    if (IS_AT_LEAST_JB) vto.removeOnGlobalLayoutListener(layoutListener)
-                    else vto.removeGlobalOnLayoutListener(layoutListener)
-                }
+            }
+            vto.addOnGlobalLayoutListener(layoutListener)
+            setOnDismissListener {
+                vto.removeOnGlobalLayoutListener(layoutListener)
             }
         }
 
