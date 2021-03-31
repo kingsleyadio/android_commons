@@ -12,7 +12,11 @@ import androidx.fragment.app.Fragment;
 /**
  * @author ADIO Kingsley O.
  * @since 06 Jun, 2015
+ *
+ * This class is now deprecated. Since the dagger setup is now going away, the remaining
+ * utilities provided here can be very easily replicated in no time
  */
+@Deprecated
 public class BaseFragment extends Fragment {
 
     private Bundle savedViewState;
@@ -62,12 +66,5 @@ public class BaseFragment extends Fragment {
     protected final boolean hasPermission(String permission) {
         return ContextCompat.checkSelfPermission(mActivity, permission)
                 == PackageManager.PERMISSION_GRANTED;
-    }
-
-    /**
-     * Get the Main Application component for dependency injection.
-     */
-    protected <C> C getAppComponent(Class<C> componentType) {
-        return componentType.cast(((BaseApplication) requireActivity().getApplication()).getComponent());
     }
 }

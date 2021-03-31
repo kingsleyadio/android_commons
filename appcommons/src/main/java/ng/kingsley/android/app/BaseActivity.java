@@ -20,7 +20,11 @@ import ng.kingsley.android.appcommons.R;
 /**
  * @author ADIO Kingsley O.
  * @since 05 Jun, 2015
+ *
+ * This class is now deprecated. Since the dagger setup is now going away, the remaining
+ * utilities provided here can be very easily replicated in no time
  */
+@Deprecated
 public class BaseActivity extends AppCompatActivity {
 
     protected Toolbar mToolbar;
@@ -124,12 +128,5 @@ public class BaseActivity extends AppCompatActivity {
     private static int[] getScreenSize(Context context) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return new int[]{metrics.widthPixels, metrics.heightPixels};
-    }
-
-    /**
-     * Get the Main Application component for dependency injection.
-     */
-    protected <C> C getAppComponent(Class<C> componentType) {
-        return componentType.cast(((BaseApplication) getApplication()).getComponent());
     }
 }

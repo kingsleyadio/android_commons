@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import ng.kingsley.android.util.DigestUtils;
-import ng.kingsley.android.util.Log;
+import timber.log.Timber;
 
 /**
  * @author ADIO Kingsley O.
@@ -57,7 +57,7 @@ public class CacheStore {
                 }
             }
         } catch (IOException e) {
-            Log.e(TAG, "Failed to put data. key=" + key, e);
+            Timber.tag(TAG).e(e, "Failed to put data. key=%s", key);
         }
 
         return false;
@@ -97,7 +97,7 @@ public class CacheStore {
                 }
             }
         } catch (IOException e) {
-            Log.e(TAG, "Failed to get data. key=" + key, e);
+            Timber.tag(TAG).e(e, "Failed to get data. key=%s", key);
         }
 
         return null;
@@ -128,7 +128,7 @@ public class CacheStore {
         try {
             return cache.get(cacheKey) != null;
         } catch (IOException e) {
-            Log.e(TAG, "Failed to peek data. key=" + key, e);
+            Timber.tag(TAG).e(e, "Failed to peek data. key=%s", key);
         }
         return false;
     }
@@ -139,7 +139,7 @@ public class CacheStore {
         try {
             return cache.remove(cacheKey);
         } catch (IOException e) {
-            Log.e(TAG, "Failed to remove data. key=" + key, e);
+            Timber.tag(TAG).e(e, "Failed to remove data. key=%s", key);
             return false;
         }
     }
