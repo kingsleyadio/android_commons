@@ -4,20 +4,20 @@ buildscript {
 
     ext {
         libraryVersion = '1.1.0-datetimepicker'
-        kotlinVersion = '1.3.50'
+        kotlinVersion = '1.4.30'
 
-        appCompatVersion = '1.1.0'
+        appCompatVersion = '1.2.0'
         cardViewVersion = '1.0.0'
-        coreKtxVersion = '1.1.0'
-        daggerVersion = '2.24'
-        exifVersion = '1.0.0'
-        googleMaterialVersion = '1.1.0-beta01'
+        coreKtxVersion = '1.3.2'
+        daggerVersion = '2.33'
+        exifVersion = '1.3.2'
+        googleMaterialVersion = '1.3.0'
         gsonVersion = '2.8.6'
-        picassoVersion = '2.71828'
-        recyclerViewVersion = '1.0.0'
+        picassoVersion = '2.8'
+        recyclerViewVersion = '1.1.0'
 
         minSdkVersion = 16
-        targetSdkVersion = 28
+        targetSdkVersion = 29
 
         nexus = "https://raw.githubusercontent.com/kingsleyadio/maven_publishing/master/publishing.gradle"
         bintray = "https://raw.githubusercontent.com/kingsleyadio/maven_publishing/master/publishing_bintray.gradle"
@@ -52,13 +52,14 @@ buildscript {
     }
 
     repositories {
-        jcenter()
         google()
+        mavenCentral()
+        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.1'
+        classpath 'com.android.tools.build:gradle:4.1.3'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -69,6 +70,7 @@ buildscript {
 allprojects {
     repositories {
         google()
+        mavenCentral()
         jcenter()
     }
 }
