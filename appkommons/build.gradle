@@ -23,7 +23,7 @@ android {
 
 dependencies {
     api project(":appcommons")
-    api "androidx.appcompat:appcompat:$appCompatVersion"
+    api "com.google.android.material:material:$googleMaterialVersion"
     api "androidx.cardview:cardview:$cardViewVersion"
     api "androidx.core:core-ktx:$coreKtxVersion"
     api "com.google.code.gson:gson:$gsonVersion"

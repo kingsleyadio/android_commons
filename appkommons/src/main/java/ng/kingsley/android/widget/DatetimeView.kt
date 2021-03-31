@@ -1,24 +1,24 @@
 package ng.kingsley.android.widget
 
-import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.content.res.ColorStateList
-import android.os.Build
+import android.content.ContextWrapper
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.InputType
 import android.text.format.DateFormat
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatEditText
+import android.view.View
 import androidx.core.content.withStyledAttributes
-import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.view.ViewCompat
+import androidx.fragment.app.FragmentActivity
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import ng.kingsley.android.appkommons.R
-import ng.kingsley.android.extensions.color
-import ng.kingsley.android.extensions.drawable
 import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 
 /**
  * @author ADIO Kingsley O.
@@ -28,7 +28,7 @@ class DatetimeView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.editTextStyle
-) : AppCompatEditText(context, attrs, defStyleAttr) {
+) : TextInputEditText(context, attrs, defStyleAttr) {
 
     var onDateChangeListener: ((Date) -> Unit)? = null
 
@@ -59,22 +59,17 @@ class DatetimeView @JvmOverloads constructor(
             val modeIndex =
                 getInt(R.styleable.DatetimeView_displayMode, 0) % DisplayMode.values().size
             displayMode = DisplayMode.values()[modeIndex]
-
-            var drawableTint = ViewCompat.getBackgroundTintList(this@DatetimeView)
-                ?: ColorStateList.valueOf(context.color(R.color.accent))
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (compoundDrawableTintList != null) {
-                    drawableTint = compoundDrawableTintList
-                }
-            }
-            val rightDrawable = context.drawable(R.drawable.ic_event_note_black_24dp)!!
-            DrawableCompat.setTintList(rightDrawable, drawableTint)
-
-            compoundDrawablePadding = resources.getDimensionPixelSize(R.dimen.margin_widget)
-            setCompoundDrawablesWithIntrinsicBounds(null, null, rightDrawable, null)
         }
 
         setOnClickListener { pickDate() }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        val layout = getTextInputLayout() ?: return
+
+        layout.endIconMode = TextInputLayout.END_ICON_CUSTOM
+        layout.setEndIconDrawable(R.drawable.ic_event_note_black_24dp)
     }
 
     private fun updateText() {
@@ -93,40 +88,25 @@ class DatetimeView @JvmOverloads constructor(
     }
 
     private fun startDatePicker(proceedToTime: Boolean) {
-        val cal = Calendar.getInstance()
-        if (date != null) cal.time = date
-        else {
-            val minDate = minDate
-            val maxDate = maxDate
-            if (minDate != null) cal.time = minDate
-            else if (maxDate != null) cal.time = maxDate
-        }
-
-        val listener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
-            cal.apply {
-                set(Calendar.YEAR, year)
-                set(Calendar.MONTH, month)
-                set(Calendar.DAY_OF_MONTH, day)
+        val currentSelection = (date ?: Date()).time.localToUtc()
+        MaterialDatePicker.Builder.datePicker()
+            .setCalendarConstraints(
+                CalendarConstraints.Builder()
+                    .apply { minDate?.let { setStart(it.time.localToUtc()) } }
+                    .apply { maxDate?.let { setEnd(it.time.localToUtc()) } }
+                    .setOpenAt(currentSelection)
+                    .build()
+            )
+            .setSelection(currentSelection)
+            .build()
+            .apply {
+                addOnPositiveButtonClickListener { selection ->
+                    val selectedDate = Date(selection.utcToLocal())
+                    if (proceedToTime) startTimePicker(selectedDate)
+                    else date = selectedDate.also { onDateChangeListener?.invoke(it) }
+                }
             }
-
-            if (proceedToTime) startTimePicker(cal.time)
-            else date = cal.apply {
-                set(Calendar.HOUR_OF_DAY, 0)
-                set(Calendar.MINUTE, 0)
-                set(Calendar.SECOND, 0)
-                set(Calendar.MILLISECOND, 0)
-
-            }.time.also { onDateChangeListener?.invoke(it) }
-        }
-
-        DatePickerDialog(
-            context, listener, cal.get(Calendar.YEAR),
-            cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)
-        ).apply {
-            minDate?.let { datePicker.minDate = it.time }
-            maxDate?.let { datePicker.maxDate = it.time }
-
-        }.show()
+            .show(getActivityContext().supportFragmentManager, null)
     }
 
     private fun startTimePicker(initialDate: Date? = null) {
@@ -146,10 +126,37 @@ class DatetimeView @JvmOverloads constructor(
         }
 
         TimePickerDialog(
-            context, listener,
+            getActivityContext(), listener,
             cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false
         ).show()
     }
+
+    private fun getTextInputLayout(): TextInputLayout? {
+        var parent = parent
+        while (parent is View) {
+            if (parent is TextInputLayout) {
+                return parent
+            }
+            parent = parent.getParent()
+        }
+        return null
+    }
+
+    private fun getActivityContext(): FragmentActivity {
+        var context = context
+        while (context !is FragmentActivity) {
+            if (context is ContextWrapper) {
+                context = context.baseContext
+            } else {
+                error("FragmentActivity context not found!")
+            }
+        }
+        return context
+    }
+
+    private fun Long.localToUtc(): Long = this + TimeZone.getDefault().getOffset(this)
+
+    private fun Long.utcToLocal(): Long = this - TimeZone.getDefault().getOffset(this)
 
     override fun onRestoreInstanceState(state: Parcelable) {
         val b = state as Bundle
