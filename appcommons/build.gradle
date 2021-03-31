@@ -19,10 +19,12 @@ android {
 
 dependencies {
     api "androidx.appcompat:appcompat:$appCompatVersion"
+    implementation "androidx.annotation:annotation:$androidAnnotation"
     api "androidx.exifinterface:exifinterface:$exifVersion"
     api "com.google.dagger:dagger:$daggerVersion"
     api "com.google.code.gson:gson:$gsonVersion"
     api 'com.jakewharton:disklrucache:2.0.2'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
