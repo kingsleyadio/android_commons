@@ -109,7 +109,7 @@ public class AppManager {
             runtime.exec("pm clear " + appContext.getPackageName());
             return true;
         } catch (Exception e) {
-            Timber.tag(TAG).e("Unable to clear application data", e);
+            Timber.tag(TAG).e(e, "Unable to clear application data");
             return false;
         }
     }
