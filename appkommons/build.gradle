@@ -1,26 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-android {
-    compileSdkVersion rootProject.targetSdkVersion
-
-    defaultConfig {
-        minSdkVersion rootProject.minSdkVersion
-        targetSdkVersion rootProject.targetSdkVersion
-        versionCode 1
-        versionName "$libraryVersion"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
-}
-
 dependencies {
     api project(":appcommons")
     api "com.google.android.material:material:$googleMaterialVersion"
@@ -32,13 +12,3 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
 }
-
-
-ext {
-    pomArtifactId = 'appkommons'
-    pomArtifactName = 'Android AppKommons'
-    pomArtifactDescription = 'Complement and sugar on top of AppCommons written in Kotlin'
-}
-
-apply from: bintray
-//apply from: nexus

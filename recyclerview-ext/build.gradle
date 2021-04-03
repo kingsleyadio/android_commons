@@ -1,33 +1,6 @@
 apply plugin: 'com.android.library'
 
-android {
-    compileSdkVersion rootProject.targetSdkVersion
-
-    defaultConfig {
-        minSdkVersion rootProject.minSdkVersion
-        targetSdkVersion rootProject.targetSdkVersion
-        versionCode 1
-        versionName "$libraryVersion"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-}
-
 dependencies {
     api "androidx.appcompat:appcompat:$appCompatVersion"
     api "androidx.recyclerview:recyclerview:$recyclerViewVersion"
 }
-
-
-ext {
-    pomArtifactId = 'recyclerview-ext'
-    pomArtifactName = 'RecyclerView Extension'
-    pomArtifactDescription = 'A simple library that adds some sweet on top of the vanilla RecyclerView'
-}
-
-apply from: bintray
-//apply from: nexus

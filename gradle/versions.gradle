@@ -1,0 +1,12 @@
+ext {
+    kotlinVersion = '1.4.30'
+    appCompatVersion = '1.2.0'
+    cardViewVersion = '1.0.0'
+    coreKtxVersion = '1.3.2'
+    daggerVersion = '2.33'
+    exifVersion = '1.3.2'
+    googleMaterialVersion = '1.3.0'
+    gsonVersion = '2.8.6'
+    picassoVersion = '2.8'
+    recyclerViewVersion = '1.1.0'
+}
