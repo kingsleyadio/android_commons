@@ -1,0 +1,73 @@
+plugins.apply("maven-publish")
+//plugins.apply("signing")
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    archiveClassifier.set('sources')
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    failOnError false
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier.set('javadoc')
+    from javadoc.destinationDir
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/$REPOSITORY")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        release(MavenPublication) {
+            groupId GROUP
+            artifactId POM_ARTIFACT_ID
+            description POM_DESCRIPTION
+            version VERSION_NAME
+            afterEvaluate {
+                from components.release
+                artifact javadocJar
+                artifact sourcesJar
+            }
+
+            pom {
+                name.set(POM_NAME)
+                description.set(POM_DESCRIPTION)
+                url.set("htts://github.com/$REPOSITORY")
+                packaging POM_PACKAGING
+
+                licenses {
+                    license {
+                        name.set('The Apache Software License, Version 2.0')
+                        url.set('http://www.apache.org/licenses/LICENSE-2.0.txt')
+                    }
+                }
+                developers {
+                    developer {
+                        id.set('kingsleyadio')
+                        name.set('Kingsley Adio')
+                        email.set('adiksonline@gmail.com')
+                    }
+                }
+            }
+        }
+    }
+}
+
+//signing {
+//    required { !props("nexus.repository").isEmpty() }
+//    sign publishing.publications.release
+//}
+//tasks.withType(Sign) {
+//    onlyIf { !props("nexus.repository").isEmpty() }
+//}

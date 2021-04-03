@@ -6,6 +6,7 @@ import android.graphics.Matrix;
 import android.util.Log;
 
 import androidx.exifinterface.media.ExifInterface;
+import timber.log.Timber;
 
 /**
  * @author ADIO Kingsley O.
@@ -62,7 +63,7 @@ public class BitmapUtils {
                     return 270;
             }
         } catch (Exception e) {
-            Log.e(TAG, "Could not detect image rotation angle", e);
+            Timber.e(e, "Could not detect image rotation angle");
         }
         return 0;
     }

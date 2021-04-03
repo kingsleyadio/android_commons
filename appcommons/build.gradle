@@ -1,39 +1,14 @@
 apply plugin: 'com.android.library'
 
-android {
-    compileSdkVersion rootProject.targetSdkVersion
-
-    defaultConfig {
-        minSdkVersion rootProject.minSdkVersion
-        targetSdkVersion rootProject.targetSdkVersion
-        versionCode 1
-        versionName "$libraryVersion"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-}
-
 dependencies {
-    api "androidx.appcompat:appcompat:$appCompatVersion"
-    api "androidx.exifinterface:exifinterface:$exifVersion"
+    api "androidx.appcompat:appcompat:$androidAppCompat"
+    api "androidx.exifinterface:exifinterface:$androidExif"
     api "com.google.dagger:dagger:$daggerVersion"
     api "com.google.code.gson:gson:$gsonVersion"
     api 'com.jakewharton:disklrucache:2.0.2'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation "junit:junit:$junit4"
 }
-
-ext {
-    pomArtifactId = 'appcommons'
-    pomArtifactName = 'Android AppCommons'
-    pomArtifactDescription = 'Carefully handpicked content to quickly bootstrap an Android project'
-}
-
-apply from: bintray
-//apply from: nexus

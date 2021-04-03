@@ -20,9 +20,8 @@ import ng.kingsley.android.extensions.textColor
  */
 class HeaderView @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : CardView(context, attrs, defStyleAttr) {
+    attrs: AttributeSet? = null
+) : CardView(context, attrs) {
 
     private val container: ViewGroup
     private val headerView: View
@@ -66,8 +65,7 @@ class HeaderView @JvmOverloads constructor(
         context.withStyledAttributes(
             attrs,
             R.styleable.HeaderView,
-            defStyleAttr,
-            R.style.HeaderView
+            defStyleRes = R.style.HeaderView
         ) {
             headerTitle = getString(R.styleable.HeaderView_headerTitle) ?: ""
             headerColor = getColor(R.styleable.HeaderView_headerColor, 0)

@@ -5,12 +5,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import androidx.annotation.IntDef;
+import android.os.*;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -18,14 +13,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ng.kingsley.android.util.Log;
+import androidx.annotation.IntDef;
 import ng.kingsley.android.util.NavigationUtils;
+import timber.log.Timber;
 
 /**
  * @author ADIO Kingsley O.
  * @since 26 Sep, 2016
+ *
+ * This class is now deprecated. Use lifecycle components from the Jetpack umbrella instead
  */
-
+@Deprecated
 public class AppManager {
 
     private static final String TAG = AppManager.class.getSimpleName();
@@ -45,7 +43,7 @@ public class AppManager {
 
     public static void register(Application app) {
         if (appContext != null) {
-            Log.w(TAG, "AppManager already registered!");
+            Timber.tag(TAG).w("AppManager already registered!");
             return;
         }
         app.registerActivityLifecycleCallbacks(MONITOR);
@@ -111,7 +109,7 @@ public class AppManager {
             runtime.exec("pm clear " + appContext.getPackageName());
             return true;
         } catch (Exception e) {
-            Log.e(TAG, "Unable to clear application data", e);
+            Timber.tag(TAG).e(e, "Unable to clear application data");
             return false;
         }
     }

@@ -11,8 +11,8 @@ import java.io.FileNotFoundException
 
 fun ContentResolver.uriExists(uri: Uri): Boolean {
     return try {
-        val afs = openAssetFileDescriptor(uri, "r")
-        afs?.use { true } ?: false
+        val afd = openAssetFileDescriptor(uri, "r")?.also { it.close() }
+        afd != null
     } catch (e: FileNotFoundException) {
         false
     }
