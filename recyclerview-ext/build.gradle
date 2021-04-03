@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
 dependencies {
-    api "androidx.appcompat:appcompat:$appCompatVersion"
-    api "androidx.recyclerview:recyclerview:$recyclerViewVersion"
+    api "androidx.appcompat:appcompat:$androidAppCompat"
+    api "androidx.recyclerview:recyclerview:$androidRecyclerView"
 }

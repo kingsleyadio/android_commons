@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 
 dependencies {
-    api "androidx.appcompat:appcompat:$appCompatVersion"
-    api "androidx.exifinterface:exifinterface:$exifVersion"
+    api "androidx.appcompat:appcompat:$androidAppCompat"
+    api "androidx.exifinterface:exifinterface:$androidExif"
     api "com.google.dagger:dagger:$daggerVersion"
     api "com.google.code.gson:gson:$gsonVersion"
     api 'com.jakewharton:disklrucache:2.0.2'
@@ -10,5 +10,5 @@ dependencies {
 
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation "junit:junit:$junit4"
 }

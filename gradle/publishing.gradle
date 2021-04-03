@@ -1,5 +1,5 @@
 plugins.apply("maven-publish")
-plugins.apply("signing")
+//plugins.apply("signing")
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
@@ -73,10 +73,10 @@ publishing {
     }
 }
 
-signing {
-    //required { !props("nexus.repository").isEmpty() }
-    sign publishing.publications.release
-}
-tasks.withType(Sign) {
-    onlyIf { !props("nexus.repository").isEmpty() }
-}
+//signing {
+//    required { !props("nexus.repository").isEmpty() }
+//    sign publishing.publications.release
+//}
+//tasks.withType(Sign) {
+//    onlyIf { !props("nexus.repository").isEmpty() }
+//}

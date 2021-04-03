@@ -14,9 +14,9 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(":appkommons")
-    implementation "com.google.android.material:material:$googleMaterialVersion"
+    implementation "com.google.android.material:material:$googleMaterial"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation "junit:junit:$junit4"
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
