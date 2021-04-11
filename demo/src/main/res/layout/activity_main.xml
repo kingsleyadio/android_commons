@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="ng.kingsley.android.appcommonsdemo.MainActivity"
+    tools:context="com.kingsleyadio.appcommons.demo.MainActivity"
     >
 
     <androidx.appcompat.widget.Toolbar
