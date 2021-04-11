@@ -44,7 +44,6 @@ publishing {
                 name.set(POM_NAME)
                 description.set(POM_DESCRIPTION)
                 url.set("htts://github.com/$REPOSITORY")
-                packaging POM_PACKAGING
 
                 licenses {
                     license {

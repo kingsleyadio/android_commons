@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.kingsleyadio.appcommons.bootstrap"
+    >
+
+    <application>
+        <activity
+            android:name="com.kingsleyadio.appcommons.bootstrap.ShutdownCompatActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent">
+        </activity>
+    </application>
+
+</manifest>
