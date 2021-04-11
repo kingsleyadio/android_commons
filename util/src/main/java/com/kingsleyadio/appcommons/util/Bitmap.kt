@@ -1,10 +1,6 @@
-package ng.kingsley.android.extensions
+package com.kingsleyadio.appcommons.util
 
-import android.graphics.Bitmap
-import android.graphics.BitmapShader
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Shader
+import android.graphics.*
 
 /**
  * @author ADIO Kingsley O.
@@ -13,20 +9,23 @@ import android.graphics.Shader
 
 fun Bitmap.trimCircle(): Bitmap {
     val self = this
-    val side = Math.min(self.width, self.height)
+    val side = minOf(self.width, self.height)
     return Bitmap.createBitmap(side, side, Bitmap.Config.ARGB_8888).apply {
-        with(Canvas(this@apply)) {
+        with(Canvas(this)) {
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.shader = BitmapShader(self, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
             val radius = side / 2F
             drawCircle(radius, radius, radius, paint)
         }
-        if (this != this@trimCircle) this@trimCircle.recycle()
     }
 }
 
 fun Bitmap.scaled(width: Int, height: Int): Bitmap {
-    return Bitmap.createScaledBitmap(this, width, height, false).also {
-        if (it != this) this.recycle()
-    }
+    return Bitmap.createScaledBitmap(this, width, height, false)
+}
+
+fun Bitmap.rotateBitmap(rotationAngle: Int): Bitmap {
+    val matrix = Matrix()
+    matrix.postRotate(rotationAngle.toFloat())
+    return Bitmap.createBitmap(this, 0, 0, width, height, matrix, false)
 }

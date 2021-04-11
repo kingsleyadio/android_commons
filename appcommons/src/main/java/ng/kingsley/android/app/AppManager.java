@@ -7,6 +7,8 @@ import android.app.Application;
 import android.content.Context;
 import android.os.*;
 
+import com.kingsleyadio.appcommons.util.ContextKt;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.HashSet;
@@ -14,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 import androidx.annotation.IntDef;
-import ng.kingsley.android.util.NavigationUtils;
 import timber.log.Timber;
 
 /**
@@ -95,7 +96,7 @@ public class AppManager {
                 task.finishAndRemoveTask();
             }
         } else {
-            NavigationUtils.badgeActivity(appContext, ShutdownCompatActivity.class);
+            ContextKt.badgeActivity(appContext, ShutdownCompatActivity.class);
         }
     }
 

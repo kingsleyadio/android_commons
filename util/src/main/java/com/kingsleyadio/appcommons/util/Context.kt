@@ -1,11 +1,14 @@
-package ng.kingsley.android.extensions
+package com.kingsleyadio.appcommons.util
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
 import androidx.core.graphics.drawable.DrawableCompat
 
 /**
@@ -14,7 +17,7 @@ import androidx.core.graphics.drawable.DrawableCompat
  */
 
 inline fun <reified T : Any> Context.requireSystemService(): T {
-    return ContextCompat.getSystemService(this, T::class.java)!!
+    return getSystemService() ?: error("Could not locate system service: ${T::class.java}")
 }
 
 fun Context.color(@ColorRes res: Int): Int = ContextCompat.getColor(this, res)
@@ -27,4 +30,10 @@ fun Context.tintedDrawable(@DrawableRes res: Int, @ColorInt tint: Int): Drawable
     val drawable = drawable(res)?.mutate() ?: return null
     DrawableCompat.setTint(DrawableCompat.wrap(drawable), tint)
     return drawable
+}
+
+fun Context.badgeActivity(clas: Class<out Activity>) {
+    val intent = Intent(this, clas)
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+    applicationContext.startActivity(intent)
 }

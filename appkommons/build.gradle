@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 
 dependencies {
     api project(":appcommons")
+    implementation project(":util")
     api "com.google.android.material:material:$googleMaterial"
     api "androidx.cardview:cardview:$androidCardView"
     api "androidx.core:core-ktx:$androidCore"

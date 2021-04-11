@@ -2,16 +2,26 @@ package ng.kingsley.android.extensions
 
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import com.kingsleyadio.appcommons.util.drawable
+import com.kingsleyadio.appcommons.util.requireSystemService
+import com.kingsleyadio.appcommons.util.tintedDrawable
 import com.squareup.picasso.Picasso
 
 /**
  * @author ADIO Kingsley O.
  * @since 26 May, 2016
  */
+
+fun View.hideSoftInput() {
+    val iMan = context.requireSystemService<InputMethodManager>()
+    iMan.hideSoftInputFromWindow(windowToken, 0)
+}
 
 fun ImageView.setTintedDrawable(@DrawableRes resId: Int, tint: Int) {
     if (resId == 0) setImageDrawable(null)
@@ -55,4 +65,3 @@ fun <T : TextView> T.setTintedCompoundDrawables(
 var TextView.textColor: Int
     get() = currentTextColor
     set(value) = setTextColor(value)
-

@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 
 dependencies {
+    implementation project(":util")
     api "androidx.appcompat:appcompat:$androidAppCompat"
-    api "androidx.exifinterface:exifinterface:$androidExif"
     api "com.google.dagger:dagger:$daggerVersion"
     implementation 'com.jakewharton.timber:timber:4.7.1'
 

@@ -10,4 +10,5 @@ ext {
     junit4 = "4.13.2"
     kotlinVersion = '1.4.31'
     picassoVersion = "2.8"
+    timberVersion = "4.7.1"
 }
