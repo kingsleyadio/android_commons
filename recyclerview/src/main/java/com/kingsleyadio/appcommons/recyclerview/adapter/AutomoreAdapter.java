@@ -1,9 +1,11 @@
-package ng.kingsley.android.recyclerview.adapter;
+package com.kingsleyadio.appcommons.recyclerview.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+
+import com.kingsleyadio.appcommons.recyclerview.R;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,7 +14,6 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import ng.kingsley.android.recyclerview.R;
 
 /**
  * @author ADIO Kingsley O.

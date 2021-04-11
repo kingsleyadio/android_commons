@@ -3,7 +3,7 @@ ext {
     androidCardView = "1.0.0"
     androidCore = "1.3.2"
     androidExif = "1.3.2"
-    androidRecyclerView = "1.1.0"
+    androidRecyclerView = "1.2.0"
     daggerVersion = "2.33"
     googleMaterial = "1.3.0"
     gsonVersion = "2.8.6"

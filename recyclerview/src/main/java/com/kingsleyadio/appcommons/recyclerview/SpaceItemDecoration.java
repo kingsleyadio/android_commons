@@ -1,4 +1,4 @@
-package ng.kingsley.android.recyclerview;
+package com.kingsleyadio.appcommons.recyclerview;
 
 import android.graphics.Rect;
 import android.view.View;

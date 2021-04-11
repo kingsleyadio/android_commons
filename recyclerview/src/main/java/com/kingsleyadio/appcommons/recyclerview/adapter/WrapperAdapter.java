@@ -1,4 +1,4 @@
-package ng.kingsley.android.recyclerview.adapter;
+package com.kingsleyadio.appcommons.recyclerview.adapter;
 
 import android.view.ViewGroup;
 

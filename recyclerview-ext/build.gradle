@@ -1,6 +1,0 @@
-apply plugin: 'com.android.library'
-
-dependencies {
-    api "androidx.appcompat:appcompat:$androidAppCompat"
-    api "androidx.recyclerview:recyclerview:$androidRecyclerView"
-}
