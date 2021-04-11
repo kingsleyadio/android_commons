@@ -13,7 +13,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(":appkommons")
+    implementation project(":appcommons")
+    implementation project(":view")
     implementation "com.google.android.material:material:$googleMaterial"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 

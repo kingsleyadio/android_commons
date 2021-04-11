@@ -1,4 +1,4 @@
-package ng.kingsley.android.extensions
+package com.kingsleyadio.appcommons.view.extensions
 
 import android.graphics.drawable.Drawable
 import android.net.Uri

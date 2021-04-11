@@ -1,4 +1,4 @@
-package ng.kingsley.android.widget
+package com.kingsleyadio.appcommons.view
 
 import android.app.TimePickerDialog
 import android.content.Context
@@ -15,7 +15,6 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import ng.kingsley.android.appkommons.R
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone

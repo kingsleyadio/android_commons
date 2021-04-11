@@ -1,4 +1,4 @@
-package ng.kingsley.android.widget
+package com.kingsleyadio.appcommons.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -11,8 +11,7 @@ import androidx.annotation.ColorInt
 import androidx.cardview.widget.CardView
 import androidx.core.content.withStyledAttributes
 import androidx.core.view.isVisible
-import ng.kingsley.android.appkommons.R
-import ng.kingsley.android.extensions.textColor
+import com.kingsleyadio.appcommons.view.extensions.textColor
 
 /**
  * @author ADIO Kingsley O.

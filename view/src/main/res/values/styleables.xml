@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <declare-styleable name="BezelImageView">
+        <attr name="maskDrawable"
+            format="reference" />
+        <attr name="borderDrawable"
+            format="reference" />
+        <attr name="desaturateOnPress"
+            format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="HeaderView">
         <attr name="headerTitle" format="string" />
         <attr name="headerColor" format="color" />
@@ -14,11 +23,6 @@
             <enum name="timeOnly" value="1" />
             <enum name="dateTime" value="2" />
         </attr>
-    </declare-styleable>
-
-    <declare-styleable name="HintSpinner">
-        <attr name="hint" />
-        <attr name="hint_layout" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="Hint">

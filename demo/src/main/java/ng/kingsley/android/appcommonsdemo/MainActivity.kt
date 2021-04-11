@@ -1,7 +1,6 @@
 package ng.kingsley.android.appcommonsdemo
 
 import android.os.Bundle
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import ng.kingsley.android.app.BaseActivity
@@ -23,6 +22,5 @@ class MainActivity : BaseActivity() {
 
 
         text_date_view.isEnabled = false
-        spinner_view.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayOf("Mango", "Suya"))
     }
 }
