@@ -34,7 +34,7 @@ jobs:
           # we can get the release name.
         run: |
           NEW_VERSION=$(grep "VERSION_NAME" gradle.properties | cut -d'=' -f2)
-          if [-n GITHUB_REF]; then
+          if [[ -n $GITHUB_REF ]]; then
             NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
           fi
           echo "New version: ${NEW_VERSION}"
