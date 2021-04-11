@@ -3,7 +3,7 @@ package ng.kingsley.android.appcommonsdemo
 import android.os.Bundle
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
-import ng.kingsley.android.app.BaseActivity
+import com.kingsleyadio.appcommons.bootstrap.BaseActivity
 import java.util.Calendar
 
 class MainActivity : BaseActivity() {

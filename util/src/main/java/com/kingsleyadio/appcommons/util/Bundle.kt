@@ -1,4 +1,4 @@
-package ng.kingsley.android.extensions
+package com.kingsleyadio.appcommons.util
 
 import android.os.Bundle
 
