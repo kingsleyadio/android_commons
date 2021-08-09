@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/datetime_set_time"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:padding="16dp"
+        />
+
+    <com.kingsleyadio.appcommons.datetime.time.HourAndMinutePicker
+        android:id="@+id/timePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:padding="16dp"
+        android:id="@+id/buttonAccept"
+        app:cornerRadius="0dp"
+        android:insetBottom="0dp"
+        app:backgroundTint="?colorPrimarySurface"
+        android:text="@android:string/ok"
+        android:textColor="?colorOnPrimarySurface"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+</LinearLayout>

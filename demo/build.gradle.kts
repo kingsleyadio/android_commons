@@ -17,6 +17,7 @@ android {
 dependencies {
     implementation(project(":bootstrap"))
     implementation(project(":view"))
+    implementation(project(":datetime"))
     val kotlinVersion: String by rootProject
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     val googleMaterial: String by rootProject

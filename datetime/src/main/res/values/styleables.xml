@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DatetimeView">
+        <attr name="displayMode" format="enum">
+            <enum name="date" value="0" />
+            <enum name="time" value="1" />
+        </attr>
+    </declare-styleable>
+</resources>
