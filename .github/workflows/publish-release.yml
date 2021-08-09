@@ -6,6 +6,12 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      placeholder:
+        description: 'Placeholder'
+        required: false
+        default: 'Placeholder'
 
 jobs:
   publish-release:
