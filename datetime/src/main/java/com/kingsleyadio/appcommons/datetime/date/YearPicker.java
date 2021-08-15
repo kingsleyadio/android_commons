@@ -36,13 +36,10 @@ public class YearPicker extends WheelPicker<Integer> {
         setItemMaximumWidthText("0000");
         updateYear();
         setSelectedYear(mSelectedYear, false);
-        setOnWheelChangeListener(new OnWheelChangeListener<Integer>() {
-            @Override
-            public void onWheelSelected(Integer item, int position) {
-            	mSelectedYear = item;
-                if (mOnYearSelectedListener != null) {
-                    mOnYearSelectedListener.onYearSelected(item);
-                }
+        setOnWheelChangeListener((item, position) -> {
+            mSelectedYear = item;
+            if (mOnYearSelectedListener != null) {
+                mOnYearSelectedListener.onYearSelected(item);
             }
         });
     }
@@ -71,11 +68,7 @@ public class YearPicker extends WheelPicker<Integer> {
     public void setStartYear(int startYear) {
         mStartYear = startYear;
         updateYear();
-        if (mStartYear > mSelectedYear) {
-            setSelectedYear(mStartYear, false);
-        } else {
-            setSelectedYear(mSelectedYear, false);
-        }
+        setSelectedYear(Math.max(mStartYear, mSelectedYear), false);
     }
 
     public void setEndYear(int endYear) {

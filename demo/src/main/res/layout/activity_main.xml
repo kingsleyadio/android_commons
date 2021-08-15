@@ -54,6 +54,7 @@
             >
 
             <com.kingsleyadio.appcommons.datetime.DatetimeView
+                android:id="@+id/dateTime_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:displayMode="date"
@@ -71,6 +72,7 @@
         >
 
         <com.kingsleyadio.appcommons.datetime.DatetimeView
+            android:id="@+id/dateTime_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:displayMode="time"

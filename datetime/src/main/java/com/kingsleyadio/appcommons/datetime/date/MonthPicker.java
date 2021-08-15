@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 
 import com.kingsleyadio.appcommons.datetime.WheelPicker;
 
-import java.text.NumberFormat;
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -38,23 +38,18 @@ public class MonthPicker extends WheelPicker<Integer> {
 
     public MonthPicker(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-	    setItemMaximumWidthText("00");
-	    NumberFormat numberFormat = NumberFormat.getNumberInstance();
-	    numberFormat.setMinimumIntegerDigits(2);
-	    setDataFormat(numberFormat);
+	    String[] months = new DateFormatSymbols().getShortMonths();
+	    setDataFormat((i) -> months[i - 1]);
 
 		Calendar.getInstance().clear();
         mSelectedMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
         updateMonth();
         setSelectedMonth(mSelectedMonth, false);
-        setOnWheelChangeListener(new OnWheelChangeListener<Integer>() {
-	        @Override
-	        public void onWheelSelected(Integer item, int position) {
-	        	mSelectedMonth = item;
-		        if (mOnMonthSelectedListener != null) {
-		        	mOnMonthSelectedListener.onMonthSelected(item);
-		        }
-	        }
+        setOnWheelChangeListener((item, position) -> {
+            mSelectedMonth = item;
+            if (mOnMonthSelectedListener != null) {
+                mOnMonthSelectedListener.onMonthSelected(item);
+            }
         });
     }
 

@@ -42,21 +42,18 @@ public class DayPicker extends WheelPicker<Integer> {
 	    setItemMaximumWidthText("00");
 	    NumberFormat numberFormat = NumberFormat.getNumberInstance();
 	    numberFormat.setMinimumIntegerDigits(2);
-	    setDataFormat(numberFormat);
+	    setDataFormat(numberFormat::format);
 
         mMinDay = 1;
         mMaxDay = Calendar.getInstance().getActualMaximum(Calendar.DATE);
         updateDay();
         mSelectedDay = Calendar.getInstance().get(Calendar.DATE);
         setSelectedDay(mSelectedDay, false);
-        setOnWheelChangeListener(new OnWheelChangeListener<Integer>() {
-	        @Override
-	        public void onWheelSelected(Integer item, int position) {
-	        	mSelectedDay = item;
-		        if (mOnDaySelectedListener != null) {
-		        	mOnDaySelectedListener.onDaySelected(item);
-		        }
-	        }
+        setOnWheelChangeListener((item, position) -> {
+            mSelectedDay = item;
+            if (mOnDaySelectedListener != null) {
+                mOnDaySelectedListener.onDaySelected(item);
+            }
         });
     }
 

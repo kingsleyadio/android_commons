@@ -30,7 +30,7 @@ public class HourPicker extends WheelPicker<Integer> {
         setItemMaximumWidthText("00");
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         numberFormat.setMinimumIntegerDigits(2);
-        setDataFormat(numberFormat);
+        setDataFormat(numberFormat::format);
         updateHour();
         setOnWheelChangeListener((item, position) -> {
             if (mOnHourSelectedListener != null) {
@@ -51,8 +51,8 @@ public class HourPicker extends WheelPicker<Integer> {
         setSelectedHour(hour, true);
     }
 
-    public void setSelectedHour(int hour, boolean smootScroll) {
-        setCurrentPosition(hour, smootScroll);
+    public void setSelectedHour(int hour, boolean smoothScroll) {
+        setCurrentPosition(hour, smoothScroll);
     }
 
     public void setOnHourSelectedListener(OnHourSelectedListener onHourSelectedListener) {

@@ -2,13 +2,13 @@ package com.kingsleyadio.appcommons.datetime.time;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
 import com.kingsleyadio.appcommons.datetime.R;
+import com.kingsleyadio.appcommons.datetime.util.ContextKt;
 
 
 /**
@@ -36,8 +36,10 @@ public class HourAndMinutePicker extends LinearLayout implements
         LayoutInflater.from(context).inflate(R.layout.layout_time, this);
         initChild();
         initAttrs(context, attrs);
-        mHourPicker.setBackgroundDrawable(getBackground());
-        mMinutePicker.setBackgroundDrawable(getBackground());
+        int colorOnSurface = ContextKt.themeColor(context, com.google.android.material.R.attr.colorOnSurface);
+        int colorSurface = ContextKt.themeColor(context, com.google.android.material.R.attr.colorSurface);
+        int backgroundColor = ContextKt.compositeOver(ContextKt.applyAlpha(colorOnSurface, 0.04f), colorSurface);
+        setBackgroundColor(backgroundColor);
     }
 
     @Override
@@ -58,12 +60,12 @@ public class HourAndMinutePicker extends LinearLayout implements
         int textSize = a.getDimensionPixelSize(R.styleable.HourAndMinutePicker_itemTextSize,
                 getResources().getDimensionPixelSize(R.dimen.WheelItemTextSize));
         int textColor = a.getColor(R.styleable.HourAndMinutePicker_itemTextColor,
-                Color.BLACK);
+            ContextKt.themeColor(context, android.R.attr.textColorPrimary));
         boolean isTextGradual = a.getBoolean(R.styleable.HourAndMinutePicker_textGradual, true);
         boolean isCyclic = a.getBoolean(R.styleable.HourAndMinutePicker_wheelCyclic, true);
         int halfVisibleItemCount = a.getInteger(R.styleable.HourAndMinutePicker_halfVisibleItemCount, 2);
         int selectedItemTextColor = a.getColor(R.styleable.HourAndMinutePicker_selectedTextColor,
-                getResources().getColor(R.color.com_ycuwq_datepicker_selectedTextColor));
+            ContextKt.themeColor(context, com.google.android.material.R.attr.colorPrimary));
         int selectedItemTextSize = a.getDimensionPixelSize(R.styleable.HourAndMinutePicker_selectedTextSize,
                 getResources().getDimensionPixelSize(R.dimen.WheelSelectedItemTextSize));
         int itemWidthSpace = a.getDimensionPixelSize(R.styleable.HourAndMinutePicker_itemWidthSpace,
@@ -72,7 +74,8 @@ public class HourAndMinutePicker extends LinearLayout implements
                 getResources().getDimensionPixelOffset(R.dimen.WheelItemHeightSpace));
         boolean isZoomInSelectedItem = a.getBoolean(R.styleable.HourAndMinutePicker_zoomInSelectedItem, true);
         boolean isShowCurtain = a.getBoolean(R.styleable.HourAndMinutePicker_wheelCurtain, true);
-        int curtainColor = a.getColor(R.styleable.HourAndMinutePicker_wheelCurtainColor, Color.WHITE);
+        int curtainColor = a.getColor(R.styleable.HourAndMinutePicker_wheelCurtainColor,
+            ContextKt.themeColor(context, com.google.android.material.R.attr.colorSurface));
         boolean isShowCurtainBorder = a.getBoolean(R.styleable.HourAndMinutePicker_wheelCurtainBorder, true);
         int curtainBorderColor = a.getColor(R.styleable.HourAndMinutePicker_wheelCurtainBorderColor,
                 getResources().getColor(R.color.com_ycuwq_datepicker_divider));
@@ -84,6 +87,7 @@ public class HourAndMinutePicker extends LinearLayout implements
         setCyclic(isCyclic);
         setHalfVisibleItemCount(halfVisibleItemCount);
         setSelectedItemTextColor(selectedItemTextColor);
+        setIndicatorTextColor(selectedItemTextColor);
         setSelectedItemTextSize(selectedItemTextSize);
         setItemWidthSpace(itemWidthSpace);
         setItemHeightSpace(itemHeightSpace);
@@ -172,13 +176,13 @@ public class HourAndMinutePicker extends LinearLayout implements
     }
 
     @Override
-    public void setBackgroundDrawable(Drawable background) {
-        super.setBackgroundDrawable(background);
+    public void setBackground(Drawable background) {
+        super.setBackground(background);
         if (mHourPicker != null) {
-            mHourPicker.setBackgroundDrawable(background);
+            mHourPicker.setBackground(background);
         }
         if (mMinutePicker != null) {
-            mMinutePicker.setBackgroundDrawable(background);
+            mMinutePicker.setBackground(background);
         }
     }
 

@@ -29,14 +29,11 @@ public class MinutePicker extends WheelPicker<Integer> {
         setItemMaximumWidthText("00");
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         numberFormat.setMinimumIntegerDigits(2);
-        setDataFormat(numberFormat);
+        setDataFormat(numberFormat::format);
         updateMinute();
-        setOnWheelChangeListener(new OnWheelChangeListener<Integer>() {
-            @Override
-            public void onWheelSelected(Integer item, int position) {
-                if (mOnMinuteSelectedListener != null) {
-                    mOnMinuteSelectedListener.onMinuteSelected(item);
-                }
+        setOnWheelChangeListener((item, position) -> {
+            if (mOnMinuteSelectedListener != null) {
+                mOnMinuteSelectedListener.onMinuteSelected(item);
             }
         });
     }
@@ -53,8 +50,8 @@ public class MinutePicker extends WheelPicker<Integer> {
         setSelectedMinute(hour, true);
     }
 
-    public void setSelectedMinute(int hour, boolean smootScroll) {
-        setCurrentPosition(hour, smootScroll);
+    public void setSelectedMinute(int hour, boolean smoothScroll) {
+        setCurrentPosition(hour, smoothScroll);
     }
 
     public void setOnMinuteSelectedListener(OnMinuteSelectedListener onMinuteSelectedListener) {

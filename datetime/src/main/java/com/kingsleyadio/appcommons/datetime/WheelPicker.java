@@ -17,7 +17,6 @@ import android.widget.Scroller;
 
 import com.kingsleyadio.appcommons.datetime.util.LinearGradient;
 
-import java.text.Format;
 import java.util.List;
 
 
@@ -33,7 +32,7 @@ public class WheelPicker<T> extends View {
 	 */
 	private List<T> mDataList;
 
-	private Format mDataFormat;
+	private Formatter<T> mDataFormat;
 
 	/**
 	 * Item的Text的颜色
@@ -291,7 +290,7 @@ public class WheelPicker<T> extends View {
 		}
 
 		//这里使用最大的,防止文字大小超过布局大小。
-        mPaint.setTextSize(mSelectedItemTextSize > mTextSize ? mSelectedItemTextSize : mTextSize);
+        mPaint.setTextSize(Math.max(mSelectedItemTextSize, mTextSize));
 
         if (!TextUtils.isEmpty(mItemMaximumWidthText)) {
             mTextMaxWidth = (int) mPaint.measureText(mItemMaximumWidthText);
@@ -411,8 +410,10 @@ public class WheelPicker<T> extends View {
 		if (mIsShowCurtainBorder) {
 			mPaint.setStyle(Paint.Style.STROKE);
 			mPaint.setColor(mCurtainBorderColor);
-			canvas.drawRect(mSelectedItemRect, mPaint);
-			canvas.drawRect(mDrawnRect, mPaint);
+			//canvas.drawRect(mSelectedItemRect, mPaint);
+			//canvas.drawRect(mDrawnRect, mPaint);
+			canvas.drawLine(mSelectedItemRect.left, mSelectedItemRect.top, mSelectedItemRect.right, mSelectedItemRect.top, mPaint);
+			canvas.drawLine(mSelectedItemRect.left, mSelectedItemRect.bottom, mSelectedItemRect.right, mSelectedItemRect.bottom, mPaint);
 		}
 		int drawnSelectedPos = - mScrollOffsetY / mItemHeight;
 		mPaint.setStyle(Paint.Style.FILL);
@@ -951,16 +952,36 @@ public class WheelPicker<T> extends View {
 	 * 设置数据集格式
 	 * @param dataFormat 格式
 	 */
-	public void setDataFormat(Format dataFormat) {
+	public void setDataFormat(Formatter<T> dataFormat) {
 		mDataFormat = dataFormat;
 		postInvalidate();
 	}
 
-	public Format getDataFormat() {
+	public Formatter<T> getDataFormat() {
 		return mDataFormat;
 	}
 
+//	@Nullable
+//	@Override
+//	protected Parcelable onSaveInstanceState() {
+//		Bundle b = new Bundle();
+//		b.putParcelable("super", super.onSaveInstanceState());
+//		b.putInt("current_position", getCurrentPosition());
+//		return b;
+//	}
+//
+//	@Override
+//	protected void onRestoreInstanceState(Parcelable state) {
+//		Bundle b = (Bundle) state;
+//		super.onRestoreInstanceState(b.getParcelable("super"));
+//		setCurrentPosition(b.getInt("current_position"), false);
+//	}
+
 	public interface OnWheelChangeListener<T> {
 		void onWheelSelected(T item, int position);
+	}
+
+	public interface Formatter<T> {
+		String format(T item);
 	}
 }
