@@ -1,6 +1,5 @@
-package com.kingsleyadio.appcommons.view
+package com.kingsleyadio.appcommons.datetime
 
-import android.app.TimePickerDialog
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Bundle
@@ -11,13 +10,12 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.withStyledAttributes
 import androidx.fragment.app.FragmentActivity
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import java.util.Calendar
-import java.util.Date
-import java.util.TimeZone
+import com.kingsleyadio.appcommons.datetime.date.DatePickerDialogFragment
+import com.kingsleyadio.appcommons.datetime.time.TimePickerDialogFragment
+import com.kingsleyadio.appcommons.datetime.util.*
+import java.util.*
 
 /**
  * @author ADIO Kingsley O.
@@ -37,7 +35,7 @@ class DatetimeView @JvmOverloads constructor(
             updateText()
         }
 
-    var displayMode: DisplayMode = DisplayMode.DATE_ONLY
+    var displayMode: DisplayMode = DisplayMode.DATE
         set(value) {
             field = value
             updateText()
@@ -52,11 +50,10 @@ class DatetimeView @JvmOverloads constructor(
         isLongClickable = false
         isCursorVisible = false
         inputType = InputType.TYPE_CLASS_TEXT
-        setSingleLine(true)
+        isSingleLine = true
 
         context.withStyledAttributes(attrs, R.styleable.DatetimeView, defStyleAttr) {
-            val modeIndex =
-                getInt(R.styleable.DatetimeView_displayMode, 0) % DisplayMode.values().size
+            val modeIndex = getInt(R.styleable.DatetimeView_displayMode, 0) % DisplayMode.values().size
             displayMode = DisplayMode.values()[modeIndex]
         }
 
@@ -68,7 +65,12 @@ class DatetimeView @JvmOverloads constructor(
         val layout = getTextInputLayout() ?: return
 
         layout.endIconMode = TextInputLayout.END_ICON_CUSTOM
-        layout.setEndIconDrawable(R.drawable.ic_event_note_black_24dp)
+        layout.setEndIconDrawable(
+            when (displayMode) {
+                DisplayMode.DATE -> R.drawable.ic_event_note_black_24dp
+                DisplayMode.TIME -> R.drawable.ic_baseline_access_time_24
+            }
+        )
     }
 
     private fun updateText() {
@@ -81,28 +83,26 @@ class DatetimeView @JvmOverloads constructor(
     }
 
     private fun pickDate() = when (displayMode) {
-        DisplayMode.DATE_ONLY -> startDatePicker(false)
-        DisplayMode.DATE_TIME -> startDatePicker(true)
-        DisplayMode.TIME_ONLY -> startTimePicker()
+        DisplayMode.DATE -> startDatePicker()
+        DisplayMode.TIME -> startTimePicker()
     }
 
-    private fun startDatePicker(proceedToTime: Boolean) {
-        val currentSelection = (date ?: Date()).time.localToUtc()
-        MaterialDatePicker.Builder.datePicker()
-            .setCalendarConstraints(
-                CalendarConstraints.Builder()
-                    .apply { minDate?.let { setStart(it.time.localToUtc()) } }
-                    .apply { maxDate?.let { setEnd(it.time.localToUtc()) } }
-                    .setOpenAt(currentSelection)
-                    .build()
-            )
-            .setSelection(currentSelection)
-            .build()
+    private fun startDatePicker() {
+        DatePickerDialogFragment()
             .apply {
-                addOnPositiveButtonClickListener { selection ->
-                    val selectedDate = Date(selection.utcToLocal())
-                    if (proceedToTime) startTimePicker(selectedDate)
-                    else date = selectedDate.also { onDateChangeListener?.invoke(it) }
+                withDatePicker { picker ->
+                    minDate?.let { picker.setMinDate(it.time) }
+                    maxDate?.let { picker.setMaxDate(it.time) }
+                    val calendar = Calendar.getInstance()
+                    calendar.time = (date ?: Date())
+                    picker.setDate(calendar.year, calendar.month + 1, calendar.dayOfMonth)
+                }
+                setOnDateChooseListener { year, month, day ->
+                    val calendar = Calendar.getInstance()
+                    calendar.year = year
+                    calendar.month = month - 1
+                    calendar.dayOfMonth = day
+                    date = calendar.time.also { onDateChangeListener?.invoke(it) }
                 }
             }
             .show(getActivityContext().supportFragmentManager, null)
@@ -111,23 +111,25 @@ class DatetimeView @JvmOverloads constructor(
     private fun startTimePicker(initialDate: Date? = null) {
         val cal = Calendar.getInstance()
         if (initialDate != null) cal.time = initialDate
-        else if (date != null) cal.time = date
+        else if (date != null) cal.time = date!!
 
-        val listener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-            cal.apply {
-                set(Calendar.HOUR_OF_DAY, hourOfDay)
-                set(Calendar.MINUTE, minute)
-                set(Calendar.SECOND, 0)
-                set(Calendar.MILLISECOND, 0)
+        TimePickerDialogFragment()
+            .apply {
+                withTimePicker { picker ->
+                    picker.setTime(cal.hourOfDay, cal.minute)
+                }
+                setOnTimeChooseListener { hour, minute ->
+                    cal.apply {
+                        set(Calendar.HOUR_OF_DAY, hour)
+                        set(Calendar.MINUTE, minute)
+                        set(Calendar.SECOND, 0)
+                        set(Calendar.MILLISECOND, 0)
+                    }
+
+                    date = cal.time.also { onDateChangeListener?.invoke(it) }
+                }
             }
-
-            date = cal.time.also { onDateChangeListener?.invoke(it) }
-        }
-
-        TimePickerDialog(
-            getActivityContext(), listener,
-            cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false
-        ).show()
+            .show(getActivityContext().supportFragmentManager, null)
     }
 
     private fun getTextInputLayout(): TextInputLayout? {
@@ -153,15 +155,11 @@ class DatetimeView @JvmOverloads constructor(
         return context
     }
 
-    private fun Long.localToUtc(): Long = this + TimeZone.getDefault().getOffset(this)
-
-    private fun Long.utcToLocal(): Long = this - TimeZone.getDefault().getOffset(this)
-
     override fun onRestoreInstanceState(state: Parcelable) {
         val b = state as Bundle
         super.onRestoreInstanceState(b.getParcelable(KEY_SUPER))
 
-        displayMode = DisplayMode.valueOf(b.getString(KEY_DISPLAY_MODE, DisplayMode.DATE_ONLY.name))
+        displayMode = DisplayMode.valueOf(b.getString(KEY_DISPLAY_MODE, DisplayMode.DATE.name))
         if (b.containsKey(KEY_DATE)) {
             date = Date(b.getLong(KEY_DATE, System.currentTimeMillis()))
         }
@@ -178,9 +176,8 @@ class DatetimeView @JvmOverloads constructor(
     }
 
     enum class DisplayMode(val format: String) {
-        DATE_ONLY("MMM d, yyyy"),
-        TIME_ONLY("hh:mma"),
-        DATE_TIME("MMM d, yyyy - hh:mma")
+        DATE("MMM d, yyyy"),
+        TIME("hh:mma")
     }
 
     companion object {

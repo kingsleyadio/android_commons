@@ -17,14 +17,6 @@
         <attr name="dividerThickness" format="dimension" />
     </declare-styleable>
 
-    <declare-styleable name="DatetimeView">
-        <attr name="displayMode" format="enum">
-            <enum name="dateOnly" value="0" />
-            <enum name="timeOnly" value="1" />
-            <enum name="dateTime" value="2" />
-        </attr>
-    </declare-styleable>
-
     <declare-styleable name="Hint">
         <attr name="hint" format="string" />
     </declare-styleable>

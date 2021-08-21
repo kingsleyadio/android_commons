@@ -41,8 +41,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_widget"
                 android:drawablePadding="@dimen/margin_widget"
-                android:drawableRight="@drawable/ic_event_note_black_24dp"
-                android:drawableTint="@color/accent"
                 android:inputType="text"
                 />
 
@@ -52,13 +50,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_full"
+            android:hint="Enter date"
             >
 
-            <com.kingsleyadio.appcommons.view.DatetimeView
+            <com.kingsleyadio.appcommons.datetime.DatetimeView
+                android:id="@+id/dateTime_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter date"
-                app:displayMode="dateOnly"
+                app:displayMode="date"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -69,13 +68,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_full"
+        android:hint="Enter time"
         >
 
-        <com.kingsleyadio.appcommons.view.DatetimeView
+        <com.kingsleyadio.appcommons.datetime.DatetimeView
+            android:id="@+id/dateTime_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter date"
-            app:displayMode="dateTime"
+            app:displayMode="time"
             />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -85,15 +85,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_full"
-        android:hint="Enter another date"
+        android:hint="Enter another time"
         app:boxBackgroundColor="@null"
         >
 
-        <com.kingsleyadio.appcommons.view.DatetimeView
+        <com.kingsleyadio.appcommons.datetime.DatetimeView
             android:id="@+id/date_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:displayMode="dateTime"
+            app:displayMode="time"
             />
 
     </com.google.android.material.textfield.TextInputLayout>
