@@ -53,8 +53,7 @@ class DatetimeView @JvmOverloads constructor(
         isSingleLine = true
 
         context.withStyledAttributes(attrs, R.styleable.DatetimeView, defStyleAttr) {
-            val modeIndex =
-                getInt(R.styleable.DatetimeView_displayMode, 0) % DisplayMode.values().size
+            val modeIndex = getInt(R.styleable.DatetimeView_displayMode, 0) % DisplayMode.values().size
             displayMode = DisplayMode.values()[modeIndex]
         }
 
@@ -103,7 +102,7 @@ class DatetimeView @JvmOverloads constructor(
                     calendar.year = year
                     calendar.month = month - 1
                     calendar.dayOfMonth = day
-                    date = calendar.time
+                    date = calendar.time.also { onDateChangeListener?.invoke(it) }
                 }
             }
             .show(getActivityContext().supportFragmentManager, null)
